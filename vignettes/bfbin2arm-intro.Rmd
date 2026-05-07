@@ -4,7 +4,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Bayesian Reanalysis of the ICT-107 Trial}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}<br>
+  %\VignetteEncoding{UTF-8}
 author: | 
   | Riko Kelter
   | Institute of Medical Statistics and Computational Biology
@@ -14,17 +14,19 @@ author: |
 date: "23 December 2025"
 ---
 
-```{r, echo = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-collapse = TRUE,
-comment = "#>",
-fig.width = 10,
-fig.height = 6,
-out.width = "100%",
-fig.align = "center",
-dpi = 300,
-warning = FALSE
+  collapse = TRUE,
+  comment  = "#>",
+  fig.width = 7,
+  fig.height = 5,
+  echo = TRUE,
+  eval = TRUE,      # default, but heavy chunks override with eval = FALSE
+  message = FALSE,
+  warning = FALSE
 )
+options(bfbin2arm.ncores = 1L)
+library(bfbin2arm)
 ```
 
 # Introduction and Overview
@@ -101,13 +103,13 @@ BF01_ict = twoarmbinbf01(y1_ict, y2_ict, n1_ict, n2_ict,
 
 # BF+1
 BFp1_ict = BFplus1(y1_ict, y2_ict, n1_ict, n2_ict, 
-                   a_1_d = 1, b_1_d = 1, 
-                   a_2_d = 1, b_2_d = 1)
+                   a_1_a = 1, b_1_a = 1, 
+                   a_2_a = 1, b_2_a = 1)
 
 # BF-1
 BFm1_ict = BFminus1(y1_ict, y2_ict, n1_ict, n2_ict, 
-                    a_1_d = 1, b_1_d = 1, 
-                    a_2_d = 1, b_2_d = 1)
+                    a_1_a = 1, b_1_a = 1, 
+                    a_2_a = 1, b_2_a = 1)
 
 # BF+0
 cat("=== ICT-107 Trial === Bayes factor BF+0 results in ", BFplus0(BFp1_ict, BF01_ict))

@@ -31,7 +31,11 @@ powertwoarmbinbf01(
   p1_grid = seq(0.01, 0.99, 0.02),
   p2_grid = seq(0.01, 0.99, 0.02),
   p1_power = NULL,
-  p2_power = NULL
+  p2_power = NULL,
+  a_1_a_Hminus = 1,
+  b_1_a_Hminus = 1,
+  a_2_a_Hminus = 1,
+  b_2_a_Hminus = 1
 )
 }
 \arguments{
@@ -65,6 +69,9 @@ type-I error over a grid.}
 \item{p1_grid, p2_grid}{Grids of true proportions for frequentist T1E.}
 
 \item{p1_power, p2_power}{Optional true proportions for frequentist power.}
+
+\item{a_1_a_Hminus, b_1_a_Hminus, a_2_a_Hminus, b_2_a_Hminus}{Shape parameters
+for analysis priors under \eqn{H_-} (directional tests).}
 }
 \value{
 Depending on \code{output}, either a named numeric vector with
@@ -82,7 +89,7 @@ and frequentist power are computed by summing over the rejection region.
 powertwoarmbinbf01(n1 = 30, n2 = 30, k = 1/3, test = "BF01")
 
 # Directional test BF+0 with frequentist type-I error
-powertwoarmbinbf01(n1 = 40, n2 = 40, k = 1/3, k_f = 3, 
+powertwoarmbinbf01(n1 = 40, n2 = 40, k = 1/3, k_f = 3,
                    test = "BF+0", compute_freq_t1e = TRUE)
 
 # Predictive density matrices (advanced)

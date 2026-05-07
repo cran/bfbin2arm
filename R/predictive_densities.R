@@ -31,7 +31,7 @@ predictiveDensityH1 <- function(y1, y2, n1, n2,
         VGAM::dbetabinom.ab(y2, n2, a_2_d, b_2_d, log = TRUE))
 }
 
-# internal normalizing constant for truncated H+
+# internal normalizing constant for truncated H+ under the design prior
 C_trunc_plus <- function(a_1_d, b_1_d, a_2_d, b_2_d) {
   stats::integrate(function(p2)
     stats::dbeta(p2, a_2_d, b_2_d) *
@@ -63,7 +63,7 @@ predictiveDensityHplus_trunc <- function(y1, y2, n1, n2,
   pred_untr / C_trunc_plus(a_1_d, b_1_d, a_2_d, b_2_d)
 }
 
-# internal normalizing constant for truncated H-
+# internal normalizing constant for truncated H- under the design prior
 C_trunc_minus <- function(a_1_d, b_1_d, a_2_d, b_2_d) {
   stats::integrate(function(p1)
     stats::dbeta(p1, a_1_d, b_1_d) *

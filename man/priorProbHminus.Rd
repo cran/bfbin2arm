@@ -4,12 +4,12 @@
 \alias{priorProbHminus}
 \title{Prior probability P(p2 <= p1) under independent Beta priors}
 \usage{
-priorProbHminus(a_1_d, b_1_d, a_2_d, b_2_d)
+priorProbHminus(a_1_a, b_1_a, a_2_a, b_2_a)
 }
 \arguments{
-\item{a_1_d, b_1_d}{Shape parameters of the Beta prior for \eqn{p_1}.}
+\item{a_1_a, b_1_a}{Shape parameters of the Beta prior for \eqn{p_1}.}
 
-\item{a_2_d, b_2_d}{Shape parameters of the Beta prior for \eqn{p_2}.}
+\item{a_2_a, b_2_a}{Shape parameters of the Beta prior for \eqn{p_2}.}
 }
 \value{
 Numeric scalar, prior probability P(p2 <= p1).

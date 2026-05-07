@@ -4,7 +4,7 @@
 \alias{BFminus1}
 \title{Bayes factor BF-1: H- vs H1}
 \usage{
-BFminus1(y1, y2, n1, n2, a_1_d = 1, b_1_d = 1, a_2_d = 1, b_2_d = 1)
+BFminus1(y1, y2, n1, n2, a_1_a = 1, b_1_a = 1, a_2_a = 1, b_2_a = 1)
 }
 \arguments{
 \item{y1}{Number of successes in arm 1 (control).}
@@ -15,9 +15,11 @@ BFminus1(y1, y2, n1, n2, a_1_d = 1, b_1_d = 1, a_2_d = 1, b_2_d = 1)
 
 \item{n2}{Sample size in arm 2.}
 
-\item{a_1_d, b_1_d}{Design-prior shape parameters for \eqn{p_1}.}
+\item{a_1_a, b_1_a}{Shape parameters of the Beta prior for \eqn{p_1} under the
+alternative (analysis prior).}
 
-\item{a_2_d, b_2_d}{Design-prior shape parameters for \eqn{p_2}.}
+\item{a_2_a, b_2_a}{Shape parameters of the Beta prior for \eqn{p_2} under the
+alternative (analysis prior).}
 }
 \value{
 Numeric scalar, BF\eqn{_{-1}}.

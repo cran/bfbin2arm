@@ -27,13 +27,13 @@ twoarmbinbf01(
 \item{n2}{Sample size in arm 2.}
 
 \item{a_0_a, b_0_a}{Shape parameters of the Beta prior for the common-\eqn{p}
-under the null model.}
+under the null model (analysis prior).}
 
 \item{a_1_a, b_1_a}{Shape parameters of the Beta prior for \eqn{p_1} under the
-alternative.}
+alternative (analysis prior).}
 
 \item{a_2_a, b_2_a}{Shape parameters of the Beta prior for \eqn{p_2} under the
-alternative.}
+alternative (analysis prior).}
 }
 \value{
 Numeric scalar, the Bayes factor BF\eqn{_{01}}.

@@ -24,6 +24,8 @@
 #'   type-I error over a grid.
 #' @param p1_grid,p2_grid Grids of true proportions for frequentist T1E.
 #' @param p1_power,p2_power Optional true proportions for frequentist power.
+#' @param a_1_a_Hminus,b_1_a_Hminus,a_2_a_Hminus,b_2_a_Hminus Shape parameters
+#'   for analysis priors under \eqn{H_-} (directional tests).
 #'
 #' @return Depending on \code{output}, either a named numeric vector with
 #'   components \code{Power}, \code{Type1_Error}, \code{CE_H0} (and optionally
@@ -31,11 +33,11 @@
 #' @examples
 #' # Basic Bayesian power for BF01 test
 #' powertwoarmbinbf01(n1 = 30, n2 = 30, k = 1/3, test = "BF01")
-#' 
+#'
 #' # Directional test BF+0 with frequentist type-I error
-#' powertwoarmbinbf01(n1 = 40, n2 = 40, k = 1/3, k_f = 3, 
+#' powertwoarmbinbf01(n1 = 40, n2 = 40, k = 1/3, k_f = 3,
 #'                    test = "BF+0", compute_freq_t1e = TRUE)
-#' 
+#'
 #' # Predictive density matrices (advanced)
 #' powertwoarmbinbf01(n1 = 25, n2 = 25, output = "predDensmatrix")
 #' @export
@@ -55,9 +57,11 @@ powertwoarmbinbf01 <- function(
     compute_freq_t1e = FALSE,
     p1_grid = seq(0.01, 0.99, 0.02),
     p2_grid = seq(0.01, 0.99, 0.02),
-    p1_power = NULL, p2_power = NULL
+    p1_power = NULL, p2_power = NULL,
+    a_1_a_Hminus = 1, b_1_a_Hminus = 1,
+    a_2_a_Hminus = 1, b_2_a_Hminus = 1
 ) {
-  test <- match.arg(test)
+  test   <- match.arg(test)
   output <- match.arg(output)
   
   # ============================================================
@@ -72,39 +76,56 @@ powertwoarmbinbf01 <- function(
   )
   
   # -------------------------------------------------------------------------
-  # internal Bayes factor helper functions (unchanged)
+  # internal Bayes factor helper functions (analysis priors only)
   # -------------------------------------------------------------------------
-  twoarmbinbf01 <- function(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a) {
-    numerator <- beta(a_0_a + y1 + y2, b_0_a + n1 + n2 - y1 - y2) / beta(a_0_a, b_0_a)
-    denominator <- (beta(a_1_a + y1, b_1_a + n1 - y1) * beta(a_2_a + y2, b_2_a + n2 - y2)) /
+  twoarmbinbf01_internal <- function(y1, y2, n1, n2,
+                                     a_0_a, b_0_a,
+                                     a_1_a, b_1_a,
+                                     a_2_a, b_2_a) {
+    numerator <- beta(a_0_a + y1 + y2,
+                      b_0_a + n1 + n2 - y1 - y2) / beta(a_0_a, b_0_a)
+    denominator <- (beta(a_1_a + y1, b_1_a + n1 - y1) *
+                      beta(a_2_a + y2, b_2_a + n2 - y2)) /
       (beta(a_1_a, b_1_a) * beta(a_2_a, b_2_a))
     numerator / denominator
   }
   
-  priorProbHplus <- function(a_1_d, b_1_d, a_2_d, b_2_d)
-    stats::integrate(function(p2) stats::dbeta(p2, a_2_d, b_2_d) * stats::pbeta(p2, a_1_d, b_1_d),
-              lower = 0, upper = 1, rel.tol = 1e-4)$value
+  priorProbHplus_internal <- function(a_1_a, b_1_a, a_2_a, b_2_a)
+    stats::integrate(
+      function(p2) stats::dbeta(p2, a_2_a, b_2_a) *
+        stats::pbeta(p2, a_1_a, b_1_a),
+      lower = 0, upper = 1, rel.tol = 1e-4
+    )$value
   
-  priorProbHminus <- function(a_1_d, b_1_d, a_2_d, b_2_d)
-    1 - priorProbHplus(a_1_d, b_1_d, a_2_d, b_2_d)
+  priorProbHminus_internal <- function(a_1_a, b_1_a, a_2_a, b_2_a)
+    1 - priorProbHplus_internal(a_1_a, b_1_a, a_2_a, b_2_a)
   
-  postProbHplus <- function(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d)
-    stats::integrate(function(p2)
-      stats::dbeta(p2, a_2_d + y2, b_2_d + n2 - y2) *
-        stats::pbeta(p2, a_1_d + y1, b_1_d + n1 - y1),
-      lower = 0, upper = 1, rel.tol = 1e-4)$value
+  postProbHplus_internal <- function(y1, y2, n1, n2,
+                                     a_1_a, b_1_a, a_2_a, b_2_a)
+    stats::integrate(
+      function(p2)
+        stats::dbeta(p2, a_2_a + y2, b_2_a + n2 - y2) *
+        stats::pbeta(p2, a_1_a + y1, b_1_a + n1 - y1),
+      lower = 0, upper = 1, rel.tol = 1e-4
+    )$value
   
-  postProbHminus <- function(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d)
-    1 - postProbHplus(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d)
+  postProbHminus_internal <- function(y1, y2, n1, n2,
+                                      a_1_a, b_1_a, a_2_a, b_2_a)
+    1 - postProbHplus_internal(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
   
-  BFplus1 <- function(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
-    postProbHplus(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a) /
-    priorProbHplus(a_1_a, b_1_a, a_2_a, b_2_a)
+  BFplus1_internal <- function(y1, y2, n1, n2,
+                               a_1_a, b_1_a, a_2_a, b_2_a)
+    postProbHplus_internal(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a) /
+    priorProbHplus_internal(a_1_a, b_1_a, a_2_a, b_2_a)
   
-  BFminus1 <- function(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
-    postProbHminus(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a) /
-    priorProbHminus(a_1_a, b_1_a, a_2_a, b_2_a)
+  BFminus1_internal <- function(y1, y2, n1, n2,
+                                a_1_a, b_1_a, a_2_a, b_2_a)
+    postProbHminus_internal(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a) /
+    priorProbHminus_internal(a_1_a, b_1_a, a_2_a, b_2_a)
   
+  # -------------------------------------------------------------------------
+  # predictive densities (design priors)
+  # -------------------------------------------------------------------------
   predictiveDensityH0 <- function(y1, y2, n1, n2, a_0_d, b_0_d) {
     exp(lchoose(n1, y1) + lchoose(n2, y2) +
           lbeta(a_0_d + y1 + y2, b_0_d + n1 + n2 - y1 - y2) -
@@ -117,85 +138,136 @@ powertwoarmbinbf01 <- function(
   }
   
   C_trunc <- function(a_1_d, b_1_d, a_2_d, b_2_d)
-    stats::integrate(function(p2) stats::dbeta(p2, a_2_d, b_2_d) * stats::pbeta(p2, a_1_d, b_1_d),
-              0, 1, rel.tol = 1e-4)$value
+    stats::integrate(
+      function(p2) stats::dbeta(p2, a_2_d, b_2_d) *
+        stats::pbeta(p2, a_1_d, b_1_d),
+      0, 1, rel.tol = 1e-4
+    )$value
   
-  predictiveDensityHplus_trunc <- function(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d) {
-    raw_int <- stats::integrate(function(p1)
-      stats::dbeta(p1, y1 + a_1_d, n1 - y1 + b_1_d) *
-        (1 - stats::pbeta(p1, y2 + a_2_d, n2 - y2 + b_2_d)), 0, 1, rel.tol = 1e-4)$value
-    pred_untr <- exp(VGAM::dbetabinom.ab(y1, n1, a_1_d, b_1_d, log = TRUE) +
-                       VGAM::dbetabinom.ab(y2, n2, a_2_d, b_2_d, log = TRUE)) * raw_int
+  predictiveDensityHplus_trunc <- function(y1, y2, n1, n2,
+                                           a_1_d, b_1_d, a_2_d, b_2_d) {
+    raw_int <- stats::integrate(
+      function(p1)
+        stats::dbeta(p1, y1 + a_1_d, n1 - y1 + b_1_d) *
+        (1 - stats::pbeta(p1, y2 + a_2_d, n2 - y2 + b_2_d)),
+      0, 1, rel.tol = 1e-4
+    )$value
+    pred_untr <- exp(
+      VGAM::dbetabinom.ab(y1, n1, a_1_d, b_1_d, log = TRUE) +
+        VGAM::dbetabinom.ab(y2, n2, a_2_d, b_2_d, log = TRUE)
+    ) * raw_int
     pred_untr / C_trunc(a_1_d, b_1_d, a_2_d, b_2_d)
   }
   
   C_trunc_Hminus <- function(a_1_d, b_1_d, a_2_d, b_2_d)
-    stats::integrate(function(p1) stats::dbeta(p1, a_1_d, b_1_d) * stats::pbeta(p1, a_2_d, b_2_d),
-              0, 1, rel.tol = 1e-4)$value
+    stats::integrate(
+      function(p1) stats::dbeta(p1, a_1_d, b_1_d) *
+        stats::pbeta(p1, a_2_d, b_2_d),
+      0, 1, rel.tol = 1e-4
+    )$value
   
-  predictiveDensityHminus_trunc <- function(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d) {
-    raw_int <- stats::integrate(function(p1)
-      stats::dbeta(p1, y1 + a_1_d, n1 - y1 + b_1_d) *
-        stats::pbeta(p1, y2 + a_2_d, n2 - y2 + b_2_d), 0, 1, rel.tol = 1e-4)$value
-    pred_untr <- exp(VGAM::dbetabinom.ab(y1, n1, a_1_d, b_1_d, log = TRUE) +
-                       VGAM::dbetabinom.ab(y2, n2, a_2_d, b_2_d, log = TRUE)) * raw_int
+  predictiveDensityHminus_trunc <- function(y1, y2, n1, n2,
+                                            a_1_d, b_1_d, a_2_d, b_2_d) {
+    raw_int <- stats::integrate(
+      function(p1)
+        stats::dbeta(p1, y1 + a_1_d, n1 - y1 + b_1_d) *
+        stats::pbeta(p1, y2 + a_2_d, n2 - y2 + b_2_d),
+      0, 1, rel.tol = 1e-4
+    )$value
+    pred_untr <- exp(
+      VGAM::dbetabinom.ab(y1, n1, a_1_d, b_1_d, log = TRUE) +
+        VGAM::dbetabinom.ab(y2, n2, a_2_d, b_2_d, log = TRUE)
+    ) * raw_int
     pred_untr / C_trunc_Hminus(a_1_d, b_1_d, a_2_d, b_2_d)
   }
   
   # -------------------------------------------------------------------------
-  # Frequentist Type-I error rate computation (updated for power)
+  # Frequentist Type-I error and power
   # -------------------------------------------------------------------------
-  sup_freq_t1e <- NA
-  freq_power <- NA
+  sup_freq_t1e <- NA_real_
+  freq_power   <- NA_real_
   
   reject_region <- matrix(FALSE, n1 + 1, n2 + 1)
   
   # First pass: identify rejection region
-  for(i in 1:(n1 + 1)) {
-    for(j in 1:(n2 + 1)) {
+  for (i in 1:(n1 + 1)) {
+    for (j in 1:(n2 + 1)) {
       y1 <- i - 1; y2 <- j - 1
       
-      if(test == "BF01") {
-        BF01 <- twoarmbinbf01(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
+      if (test == "BF01") {
+        BF01 <- twoarmbinbf01_internal(
+          y1, y2, n1, n2,
+          a_0_a, b_0_a, a_1_a, b_1_a, a_2_a, b_2_a
+        )
         reject_region[i, j] <- (BF01 < k)
-      } else if(test == "BF+0") {
-        BF01 <- twoarmbinbf01(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
-        BFp1 <- BFplus1(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
+        
+      } else if (test == "BF+0") {
+        BF01 <- twoarmbinbf01_internal(
+          y1, y2, n1, n2,
+          a_0_a, b_0_a, a_1_a, b_1_a, a_2_a, b_2_a
+        )
+        BFp1 <- BFplus1_internal(
+          y1, y2, n1, n2,
+          a_1_a, b_1_a, a_2_a, b_2_a
+        )
         BFp0 <- BFp1 / BF01
         BF0p <- 1 / BFp0
         reject_region[i, j] <- (BF0p < k)
-      } else if(test == "BF-0") {
-        BF01 <- twoarmbinbf01(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
-        BFm1 <- BFminus1(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
+        
+      } else if (test == "BF-0") {
+        BF01 <- twoarmbinbf01_internal(
+          y1, y2, n1, n2,
+          a_0_a, b_0_a, a_1_a, b_1_a, a_2_a, b_2_a
+        )
+        BFm1 <- BFminus1_internal(
+          y1, y2, n1, n2,
+          a_1_a_Hminus, b_1_a_Hminus,
+          a_2_a_Hminus, b_2_a_Hminus
+        )
         BFm0 <- BFm1 / BF01
         BF0m <- 1 / BFm0
         reject_region[i, j] <- (BF0m < k)
-      } else if(test == "BF+-") {
-        BFp1 <- BFplus1(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
-        BFm1 <- BFminus1(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
+        
+      } else if (test == "BF+-") {
+        BFp1 <- BFplus1_internal(
+          y1, y2, n1, n2,
+          a_1_a, b_1_a, a_2_a, b_2_a
+        )
+        BFm1 <- BFminus1_internal(
+          y1, y2, n1, n2,
+          a_1_a_Hminus, b_1_a_Hminus,
+          a_2_a_Hminus, b_2_a_Hminus
+        )
         BFpm <- BFp1 / BFm1
         BFmp <- 1 / BFpm
-        reject_region[i, j] <- (BFmp < k)  # Reject H- (favor H+)
+        reject_region[i, j] <- (BFmp < k)  # reject H- in favour of H+
       }
     }
   }
   
-  # Second pass: compute supremum Type-I error over null region
+  # Second pass: supremum Type-I error over null region
   if (compute_freq_t1e) {
     freq_t1e_grid <- matrix(0, length(p1_grid), length(p2_grid))
-    for(pi in 1:length(p1_grid)) {
-      for(pj in 1:length(p2_grid)) {
-        p1_true <- p1_grid[pi]; p2_true <- p2_grid[pj]
+    for (pi in seq_along(p1_grid)) {
+      for (pj in seq_along(p2_grid)) {
+        p1_true <- p1_grid[pi]
+        p2_true <- p2_grid[pj]
         
-        if(test == "BF01" || test == "BF+0" || test == "BF-0") {
-          if(abs(p1_true - p2_true) < 1e-6) {
-            freq_t1e_grid[pi, pj] <- sum(reject_region * stats::dbinom(0:n1, n1, p1_true) %o% 
-                                           stats::dbinom(0:n2, n2, p2_true))
+        if (test %in% c("BF01", "BF+0", "BF-0")) {
+          if (abs(p1_true - p2_true) < 1e-6) {
+            freq_t1e_grid[pi, pj] <- sum(
+              reject_region *
+                stats::dbinom(0:n1, n1, p1_true) %o%
+                stats::dbinom(0:n2, n2, p2_true)
+            )
           }
-        } else if(test == "BF+-") {
-          if(p2_true <= p1_true) {
-            freq_t1e_grid[pi, pj] <- sum(reject_region * stats::dbinom(0:n1, n1, p1_true) %o% 
-                                           stats::dbinom(0:n2, n2, p2_true))
+        } else if (test == "BF+-") {
+          if (p2_true <= p1_true) {
+            freq_t1e_grid[pi, pj] <- sum(
+              reject_region *
+                stats::dbinom(0:n1, n1, p1_true) %o%
+                stats::dbinom(0:n2, n2, p2_true)
+            )
           }
         }
       }
@@ -203,76 +275,112 @@ powertwoarmbinbf01 <- function(
     sup_freq_t1e <- max(freq_t1e_grid, na.rm = TRUE)
   }
   
-  # Frequentist power computation for specified p1_power, p2_power
+  # Frequentist power for specified p1_power, p2_power
   if (!is.null(p1_power) && !is.null(p2_power)) {
-    freq_power <- sum(reject_region * stats::dbinom(0:n1, n1, p1_power) %o% 
-                        stats::dbinom(0:n2, n2, p2_power))
+    freq_power <- sum(
+      reject_region *
+        stats::dbinom(0:n1, n1, p1_power) %o%
+        stats::dbinom(0:n2, n2, p2_power)
+    )
   }
   
   # -------------------------------------------------------------------------
-  # matrices for outcomes (Bayesian calculations - unchanged)
+  # matrices for Bayesian calculations
   # -------------------------------------------------------------------------
-  BFmat <- matrix(0, n1 + 1, n2 + 1)
-  BFmat_t1e <- matrix(0, n1 + 1, n2 + 1)
-  BFmat_ceH0 <- matrix(0, n1 + 1, n2 + 1)
+  BFmat       <- matrix(0, n1 + 1, n2 + 1)
+  BFmat_t1e   <- matrix(0, n1 + 1, n2 + 1)
+  BFmat_ceH0  <- matrix(0, n1 + 1, n2 + 1)
   
-  # -------------------------------------------------------------------------
-  # main grid loop (Bayesian power calculations - unchanged)
-  # -------------------------------------------------------------------------
-  for(i in 1:(n1 + 1)) {
-    for(j in 1:(n2 + 1)) {
+  # main grid loop (Bayesian power)
+  for (i in 1:(n1 + 1)) {
+    for (j in 1:(n2 + 1)) {
       y1 <- i - 1; y2 <- j - 1
       
-      if(test == "BF01") {
-        BF01 <- twoarmbinbf01(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
-        if(BF01 < k) {
-          BFmat[i, j] <- predictiveDensityH1(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d)
-          BFmat_t1e[i, j] <- predictiveDensityH0(y1, y2, n1, n2, a_0_d, b_0_d)
+      if (test == "BF01") {
+        BF01 <- twoarmbinbf01_internal(
+          y1, y2, n1, n2,
+          a_0_a, b_0_a, a_1_a, b_1_a, a_2_a, b_2_a
+        )
+        if (BF01 < k) {
+          BFmat[i, j]      <- predictiveDensityH1(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d)
+          BFmat_t1e[i, j]  <- predictiveDensityH0(y1, y2, n1, n2, a_0_d, b_0_d)
         }
-        if(BF01 > k_f)
+        if (BF01 > k_f) {
           BFmat_ceH0[i, j] <- predictiveDensityH0(y1, y2, n1, n2, a_0_d, b_0_d)
+        }
       }
       
-      if(test == "BF+0") {
-        BF01 <- twoarmbinbf01(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
-        BFp1 <- BFplus1(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
+      if (test == "BF+0") {
+        BF01 <- twoarmbinbf01_internal(
+          y1, y2, n1, n2,
+          a_0_a, b_0_a, a_1_a, b_1_a, a_2_a, b_2_a
+        )
+        BFp1 <- BFplus1_internal(
+          y1, y2, n1, n2,
+          a_1_a, b_1_a, a_2_a, b_2_a
+        )
         BFp0 <- BFp1 / BF01
         BF0p <- 1 / BFp0
-        if(BF0p < k) {
-          BFmat[i, j] <- predictiveDensityHplus_trunc(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d)
+        if (BF0p < k) {
+          BFmat[i, j]     <- predictiveDensityHplus_trunc(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d)
           BFmat_t1e[i, j] <- predictiveDensityH0(y1, y2, n1, n2, a_0_d, b_0_d)
         }
-        if(BF0p > k_f)
+        if (BF0p > k_f) {
           BFmat_ceH0[i, j] <- predictiveDensityH0(y1, y2, n1, n2, a_0_d, b_0_d)
+        }
       }
       
-      if(test == "BF-0") {
-        BF01 <- twoarmbinbf01(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
-        BFm1 <- BFminus1(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
+      if (test == "BF-0") {
+        BF01 <- twoarmbinbf01_internal(
+          y1, y2, n1, n2,
+          a_0_a, b_0_a, a_1_a, b_1_a, a_2_a, b_2_a
+        )
+        BFm1 <- BFminus1_internal(
+          y1, y2, n1, n2,
+          a_1_a_Hminus, b_1_a_Hminus,
+          a_2_a_Hminus, b_2_a_Hminus
+        )
         BFm0 <- BFm1 / BF01
         BF0m <- 1 / BFm0
-        if(BF0m < k) {
-          BFmat[i, j] <- predictiveDensityHminus_trunc(y1, y2, n1, n2,
-                                                       a_1_d_Hminus, b_1_d_Hminus, a_2_d_Hminus, b_2_d_Hminus)
+        if (BF0m < k) {
+          BFmat[i, j]     <- predictiveDensityHminus_trunc(
+            y1, y2, n1, n2,
+            a_1_d_Hminus, b_1_d_Hminus, a_2_d_Hminus, b_2_d_Hminus
+          )
           BFmat_t1e[i, j] <- predictiveDensityH0(y1, y2, n1, n2, a_0_d, b_0_d)
         }
-        if(BF0m > k_f)
+        if (BF0m > k_f) {
           BFmat_ceH0[i, j] <- predictiveDensityH0(y1, y2, n1, n2, a_0_d, b_0_d)
+        }
       }
       
-      if(test == "BF+-") {
-        BFp1 <- BFplus1(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
-        BFm1 <- BFminus1(y1, y2, n1, n2, a_1_a, b_1_a, a_2_a, b_2_a)
+      if (test == "BF+-") {
+        BFp1 <- BFplus1_internal(
+          y1, y2, n1, n2,
+          a_1_a, b_1_a, a_2_a, b_2_a
+        )
+        BFm1 <- BFminus1_internal(
+          y1, y2, n1, n2,
+          a_1_a_Hminus, b_1_a_Hminus,
+          a_2_a_Hminus, b_2_a_Hminus
+        )
         BFpm <- BFp1 / BFm1
         BFmp <- 1 / BFpm
-        if(BFmp < k) {
-          BFmat[i, j] <- predictiveDensityHplus_trunc(y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d)
-          BFmat_t1e[i, j] <- predictiveDensityHminus_trunc(y1, y2, n1, n2,
-                                                           a_1_d_Hminus, b_1_d_Hminus, a_2_d_Hminus, b_2_d_Hminus)
+        if (BFmp < k) {
+          BFmat[i, j]     <- predictiveDensityHplus_trunc(
+            y1, y2, n1, n2, a_1_d, b_1_d, a_2_d, b_2_d
+          )
+          BFmat_t1e[i, j] <- predictiveDensityHminus_trunc(
+            y1, y2, n1, n2,
+            a_1_d_Hminus, b_1_d_Hminus, a_2_d_Hminus, b_2_d_Hminus
+          )
         }
-        if(BFmp > k_f)
-          BFmat_ceH0[i, j] <- predictiveDensityHminus_trunc(y1, y2, n1, n2,
-                                                            a_1_d_Hminus, b_1_d_Hminus, a_2_d_Hminus, b_2_d_Hminus)
+        if (BFmp > k_f) {
+          BFmat_ceH0[i, j] <- predictiveDensityHminus_trunc(
+            y1, y2, n1, n2,
+            a_1_d_Hminus, b_1_d_Hminus, a_2_d_Hminus, b_2_d_Hminus
+          )
+        }
       }
     }
   }
@@ -283,28 +391,30 @@ powertwoarmbinbf01 <- function(
   if (!is.na(sup_freq_t1e)) {
     vals <- c(vals, Frequentist_Type1_Error = sup_freq_t1e)
   }
-  
-  if (!is.na(freq_power)) {
+  if (!is.null(p1_power) && !is.null(p2_power) && !is.na(freq_power)) {
     vals <- c(vals, Frequentist_Power = freq_power)
   }
   
-  if(output == "numeric") {
-    attr(vals, "hypothesis") <- test_description
-    attr(vals, "compute_freq_t1e") <- compute_freq_t1e
-    attr(vals, "p1_power") <- p1_power
-    attr(vals, "p2_power") <- p2_power
+  if (output == "numeric") {
+    attr(vals, "hypothesis")        <- test_description
+    attr(vals, "compute_freq_t1e")  <- compute_freq_t1e
+    attr(vals, "p1_power")          <- p1_power
+    attr(vals, "p2_power")          <- p2_power
     return(vals)
   }
   
-  if(output == "predDensmatrix") return(round(BFmat, 4))
-  if(output == "t1ematrix")     return(round(BFmat_t1e, 4))
-  if(output == "ceH0matrix")    return(round(BFmat_ceH0, 4))
-  if(output == "frequentist_t1e" && compute_freq_t1e) {
-    return(list(sup_freq_t1e = sup_freq_t1e, p1_grid = p1_grid, p2_grid = p2_grid,
-                test_description = test_description))
+  if (output == "predDensmatrix") return(round(BFmat,      4))
+  if (output == "t1ematrix")      return(round(BFmat_t1e,  4))
+  if (output == "ceH0matrix")     return(round(BFmat_ceH0, 4))
+  if (output == "frequentist_t1e" && compute_freq_t1e) {
+    return(list(
+      sup_freq_t1e    = sup_freq_t1e,
+      p1_grid         = p1_grid,
+      p2_grid         = p2_grid,
+      test_description = test_description
+    ))
   }
 }
-
 
 
 #' Sample size calibration for two-arm binomial Bayes factor designs
@@ -387,7 +497,7 @@ ntwoarmbinbf01 <- function(
   
   if (!is.null(p1_power) && !is.null(p2_power)) {
     message(sprintf("Frequentist power computation: p1=%.2f, p2=%.2f\n",
-                p1_power, p2_power))
+                    p1_power, p2_power))
   }
   
   hyp_desc <- switch(
@@ -427,6 +537,8 @@ ntwoarmbinbf01 <- function(
       output = "numeric",
       a_1_d_Hminus = a_1_d_Hminus, b_1_d_Hminus = b_1_d_Hminus,
       a_2_d_Hminus = a_2_d_Hminus, b_2_d_Hminus = b_2_d_Hminus,
+      a_1_a_Hminus = a_1_a_Hminus, b_1_a_Hminus = b_1_a_Hminus,
+      a_2_a_Hminus = a_2_a_Hminus, b_2_a_Hminus = b_2_a_Hminus,
       compute_freq_t1e = compute_freq_t1e,
       p1_grid = p1_grid, p2_grid = p2_grid,
       p1_power = p1_power, p2_power = p2_power
@@ -490,30 +602,30 @@ ntwoarmbinbf01 <- function(
   message(sprintf("  Hypotheses: %s\n", hyp_desc))
   message(sprintf("  k = %.3f, k_f = %.3f\n", k, k_f))
   message(sprintf("  Allocation: alloc1 = %.3f, alloc2 = %.3f\n",
-              alloc1, alloc2))
-  message(sprintf("  Target power = %.2f, alpha = %.2f, P(CE|H0) = %.2f\n\n",
-              power, alpha, pce_H0))
+                  alloc1, alloc2))
+  message(sprintf("  Target power = %.3f, alpha = %.3f, P(CE|H0) = %.3f\n\n",
+                  power, alpha, pce_H0))
   
   if (!power_met)
     message(sprintf("    POWER not reached: max=%.3f at n_total=%d\n",
-                max(powervec_k), max(ns)))
+                    max(powervec_k), max(ns)))
   else
-    message(sprintf("    Power >= %.2f achieved at n_total=%d\n",
-                power, n_power))
+    message(sprintf("    Power >= %.3f achieved at n_total=%d\n",
+                    power, n_power))
   
   if (!t1e_met)
     message(sprintf("    Bayesian Type-I error too high: min=%.3f at n_total=%d\n",
-                min(t1evec_k), max(ns)))
+                    min(t1evec_k), max(ns)))
   else
-    message(sprintf("    Bayesian Type-I error <= %.2f achieved at n_total=%d\n",
-                alpha, n_t1e))
+    message(sprintf("    Bayesian Type-I error <= %.3f achieved at n_total=%d\n",
+                    alpha, n_t1e))
   
   if (!pce_met)
     message(sprintf("    P(CE|H0) not reached: max=%.3f at n_total=%d\n",
-                max(pceH0_vec_k_f), max(ns)))
+                    max(pceH0_vec_k_f), max(ns)))
   else
-    message(sprintf("    P(CE|H0) >= %.2f achieved at n_total=%d\n",
-                pce_H0, n_pceH0))
+    message(sprintf("    P(CE|H0) >= %.3f achieved at n_total=%d\n",
+                    pce_H0, n_pceH0))
   
   if (compute_freq_t1e && length(freq_t1e_results) > 0) {
     max_freq_t1e <- max(freq_t1e_results)
@@ -522,12 +634,12 @@ ntwoarmbinbf01 <- function(
     n_freq_t1e <- ifelse(freq_t1e_met, ns[min(freq_t1e_idx)], NA)
     if (freq_t1e_met)
       message(sprintf(
-        "    Frequentist Type-I error <= %.2f achieved (max(sup)=%.3f)\n",
+        "    Frequentist Type-I error <= %.3f achieved (max(sup)=%.3f)\n",
         alpha, max_freq_t1e
       ))
     else
       message(sprintf(
-        "    FREQUENTIST Type-I error TOO HIGH: max(sup)=%.3f > %.2f\n",
+        "    FREQUENTIST Type-I error TOO HIGH: max(sup)=%.3f > %.3f\n",
         max_freq_t1e, alpha
       ))
   }
@@ -536,12 +648,12 @@ ntwoarmbinbf01 <- function(
       length(freq_power_results) > 0) {
     if (freq_power_met)
       message(sprintf(
-        "    Frequentist power >= %.2f achieved at n_total=%d (p1=%.2f, p2=%.2f)\n",
+        "    Frequentist power >= %.3f achieved at n_total=%d (p1=%.3f, p2=%.3f)\n",
         power, n_freq_power, p1_power, p2_power
       ))
     else
       message(sprintf(
-        "    Frequentist power not reached: max=%.3f at n_total=%d (p1=%.2f, p2=%.2f)\n",
+        "    Frequentist power not reached: max=%.3f at n_total=%d (p1=%.3f, p2=%.3f)\n",
         max(freq_power_results), max(ns), p1_power, p2_power
       ))
   }
