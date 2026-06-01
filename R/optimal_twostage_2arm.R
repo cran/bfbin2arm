@@ -568,9 +568,19 @@ optimal_twostage_2arm_bf <- function(
     naive_t1e   <- unname(oc["Type1_Error"])
     naive_pceH0 <- unname(oc["CE_H0"])
     
+    # Corrections:
+    # - Power, Type1_Error: subtract trajectories removed by interim futility
+    # - CE_H0: add futility trajectories that would not be CE(H0) at final
     corr_power <- naive_power - Delta1
     corr_t1e   <- naive_t1e   - Delta0
     corr_pceH0 <- naive_pceH0 + DeltaCE0
+    
+    # Numerical safety: clamp to [0, 1]
+    clamp01 <- function(x) pmin(pmax(x, 0), 1)
+    
+    corr_power <- clamp01(corr_power)
+    corr_t1e   <- clamp01(corr_t1e)
+    corr_pceH0 <- clamp01(corr_pceH0)
     
     futility_prob <- sum(f1_0 * (BFmat_interim == 1L))
     N1 <- n1_1 + n1_2
@@ -578,11 +588,11 @@ optimal_twostage_2arm_bf <- function(
     E_H0_N <- N1 * futility_prob + N2 * (1 - futility_prob)
     
     c(
-      Power = corr_power,
-      Type1_Error = corr_t1e,
-      CE_H0 = corr_pceH0,
+      Power         = corr_power,
+      Type1_Error   = corr_t1e,
+      CE_H0         = corr_pceH0,
       futility_prob = futility_prob,
-      E_H0_N = E_H0_N
+      E_H0_N        = E_H0_N
     )
   }
   

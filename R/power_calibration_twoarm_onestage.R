@@ -992,3 +992,106 @@ ntwoarmbinbf01 <- function(
     )
   ))
 }
+
+
+
+
+
+#' Sample size calibration for two-arm binomial Bayes factor designs
+#'
+#' Backward-compatible wrapper around \code{design_twoarm_onestage_bf()}.
+#'
+#' @inheritParams powertwoarmbinbf01
+#' @param power Target Bayesian power.
+#' @param alpha Target Bayesian type-I error.
+#' @param pce_H0 Target probability of compelling evidence under \eqn{H_0}.
+#' @param nrange Integer vector of length 2 giving the search range for total n.
+#' @param n_step Step size for n. Currently only \code{n_step = 1} is supported
+#'   in the object-based calibration workflow.
+#' @param progress Logical; if \code{TRUE}, print progress to the console.
+#' @param output \code{"plot"} or \code{"numeric"}.
+#' @param alloc1,alloc2 Fixed randomisation probabilities for arm 1 and arm 2;
+#'   must be positive and sum to 1.
+#' @param sustain_n Non-negative integer. A candidate total sample size is
+#'   considered feasible only if the relevant target constraints hold at that
+#'   total sample size and for the next \code{sustain_n} larger total sample
+#'   sizes in the search range.
+#'
+#' @return If \code{output = "numeric"}, returns a
+#'   \code{"twoarm_onestage_bf_design"} object. If \code{output = "plot"},
+#'   the plot is printed and the design object is returned invisibly.
+#' @export
+ntwoarmbinbf01 <- function(
+    k = 1/3, k_f = 3,
+    power = 0.8, alpha = 0.05, pce_H0 = 0.9,
+    test = c("BF01", "BF+0", "BF-0", "BF+-"),
+    nrange = c(10, 150), n_step = 1,
+    progress = TRUE, compute_freq_t1e = FALSE,
+    p1_grid = seq(0.01, 0.99, 0.02),
+    p2_grid = seq(0.01, 0.99, 0.02),
+    p1_power = NULL, p2_power = NULL,
+    a_0_d = 1, b_0_d = 1, a_0_a = 1, b_0_a = 1,
+    a_1_d = 1, b_1_d = 1, a_2_d = 1, b_2_d = 1,
+    a_1_a = 1, b_1_a = 1, a_2_a = 1, b_2_a = 1,
+    output = c("plot", "numeric"),
+    a_1_d_Hminus = 1, b_1_d_Hminus = 1,
+    a_2_d_Hminus = 1, b_2_d_Hminus = 1,
+    a_1_a_Hminus = 1, b_1_a_Hminus = 1,
+    a_2_a_Hminus = 1, b_2_a_Hminus = 1,
+    alloc1 = 0.5, alloc2 = 0.5,
+    sustain_n = 10L
+) {
+  test <- match.arg(test)
+  output <- match.arg(output)
+  
+  if (!identical(n_step, 1)) {
+    stop("Currently, 'n_step' must be 1 in ntwoarmbinbf01().", call. = FALSE)
+  }
+  
+  calibration <- if (isTRUE(compute_freq_t1e) && !is.null(p1_power) && !is.null(p2_power)) {
+    "full"
+  } else if (isTRUE(compute_freq_t1e)) {
+    "hybrid"
+  } else {
+    "Bayesian"
+  }
+  
+  obj <- design_twoarm_onestage_bf(
+    n_min = nrange[1],
+    n_max = nrange[2],
+    k = k,
+    k_f = k_f,
+    test = test,
+    a_0_d = a_0_d, b_0_d = b_0_d,
+    a_0_a = a_0_a, b_0_a = b_0_a,
+    a_1_d = a_1_d, b_1_d = b_1_d,
+    a_2_d = a_2_d, b_2_d = b_2_d,
+    a_1_a = a_1_a, b_1_a = b_1_a,
+    a_2_a = a_2_a, b_2_a = b_2_a,
+    a_1_d_Hminus = a_1_d_Hminus, b_1_d_Hminus = b_1_d_Hminus,
+    a_2_d_Hminus = a_2_d_Hminus, b_2_d_Hminus = b_2_d_Hminus,
+    a_1_a_Hminus = a_1_a_Hminus, b_1_a_Hminus = b_1_a_Hminus,
+    a_2_a_Hminus = a_2_a_Hminus, b_2_a_Hminus = b_2_a_Hminus,
+    alloc1 = alloc1,
+    alloc2 = alloc2,
+    calibration = calibration,
+    target_power = power,
+    target_type1 = alpha,
+    target_ce_h0 = pce_H0,
+    target_freq_power = power,
+    target_freq_type1 = alpha,
+    p1_grid = p1_grid,
+    p2_grid = p2_grid,
+    p1_power = p1_power,
+    p2_power = p2_power,
+    sustain_n = sustain_n,
+    progress = progress
+  )
+  
+  if (output == "plot") {
+    print(plot(obj, type = "old"))
+    return(invisible(obj))
+  }
+  
+  obj
+}
