@@ -140,26 +140,27 @@ plot.singlearm_onestage_bf_design <- function(
     c(0, 1)
   }
   
-  plot(sr$n, sr$power, type = "l", lwd = 2, col = "#D55E00",
+  plot(sr$n, sr$power, type = "l", lwd = 2, lty = 1, col = "#D55E00",
        ylim = ylim_use,
        xlab = "Total sample size n",
        ylab = "Operating characteristic",
        main = "Operating characteristics")
   
-  lines(sr$n, sr$type1, lwd = 2, col = "#0072B2")
+  lines(sr$n, sr$type1, lwd = 2, lty = 1, col = "#0072B2")
   
   if (show_ce) {
-    lines(sr$n, sr$ce_h0, lwd = 2, col = "#CC79A7")
+    lines(sr$n, sr$ce_h0, lwd = 2, lty = 1, col = "#CC79A7")
   }
   
   if (show_freq_power) {
-    lines(sr$n, sr$freq_power, lwd = 2, lty = 2, col = "#E69F00")
+    lines(sr$n, sr$freq_power, lwd = 2, lty = 1, col = "#E69F00")
   }
   
   if (show_freq_type1) {
-    lines(sr$n, sr$freq_type1, lwd = 2, lty = 2, col = "#56B4E9")
+    lines(sr$n, sr$freq_type1, lwd = 2, lty = 1, col = "#56B4E9")
   }
   
+  ## Target/reference lines remain dotted for orientation
   abline(h = x$inputs$target_power + x$inputs$power_cushion,
          lty = 3, col = "#D55E00")
   abline(h = x$inputs$target_type1,
@@ -194,13 +195,13 @@ plot.singlearm_onestage_bf_design <- function(
   if (show_freq_power) {
     legend_labels <- c(legend_labels, "Freq power")
     legend_cols <- c(legend_cols, "#E69F00")
-    legend_lty <- c(legend_lty, 2)
+    legend_lty <- c(legend_lty, 1)
   }
   
   if (show_freq_type1) {
     legend_labels <- c(legend_labels, "Freq type-I")
     legend_cols <- c(legend_cols, "#56B4E9")
-    legend_lty <- c(legend_lty, 2)
+    legend_lty <- c(legend_lty, 1)
   }
   
   legend_args <- list(

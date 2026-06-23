@@ -63,11 +63,13 @@ test_that("single-arm direction BF01 is monotone in x for superiority direction"
   n   <- 20
   p0  <- 0.2
   bfs <- singlearm_bf01(
-    x   = 0:n,
-    n   = n,
-    p0  = p0,
-    a   = 1,
-    b   = 1,
+    x    = 0:n,
+    n    = n,
+    p0   = p0,
+    a0   = 1,
+    b0   = 1,
+    a1   = 1,
+    b1   = 1,
     type = "direction"
   )
   

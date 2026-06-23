@@ -1,8 +1,8 @@
 Package: bfbin2arm
 Type: Package
 Title: Bayes Factor Design for Two-Arm Binomial Trials
-Version: 0.1.3
-Date: 2026-05-06
+Version: 0.1.4
+Date: 2026-06-23
 Authors@R: 
     c(person(given = "Riko", family = "Kelter", role = c("aut", "cre"),
              email = "rkelter@uni-koeln.de"))
@@ -14,17 +14,22 @@ Description: Design and analysis of one- and two-stage binomial
     and control arm are implemented for the one- and two-stage designs.
 Depends: R (>= 4.0.0)
 Imports: stats, VGAM, dplyr, parallel, utils, ggplot2, patchwork, rlang
-Suggests: knitr, rmarkdown, kableExtra, testthat (>= 3.0.0)
+Suggests: knitr, rmarkdown, kableExtra, testthat (>= 3.0.0), purrr,
+        tidyr,
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
-URL: https://arxiv.org/abs/2511.23144,
+URL: https://rikokelter.github.io/bfbin2arm/,
+        https://github.com/rikokelter/bfbin2arm,
+        https://arxiv.org/abs/2511.23144,
         https://arxiv.org/abs/2603.01715,
-        https://arxiv.org/abs/2502.02914
+        https://arxiv.org/abs/2502.02914,
+        https://arxiv.org/abs/2606.02410,
+        https://rikokelter.github.io/bfbin2arm/
 NeedsCompilation: no
-Packaged: 2026-06-01 17:53:51 UTC; riko
+Packaged: 2026-06-23 15:38:35 UTC; riko
 Author: Riko Kelter [aut, cre]
 Maintainer: Riko Kelter <rkelter@uni-koeln.de>
 Repository: CRAN
-Date/Publication: 2026-06-01 19:40:02 UTC
+Date/Publication: 2026-06-23 16:10:02 UTC

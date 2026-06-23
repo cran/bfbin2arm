@@ -1,12 +1,17 @@
-## ----include = FALSE----------------------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
-  collapse   = TRUE,
-  comment    = "#>",
+  collapse = TRUE,
+  comment = "#>",
   fig.width  = 7,
   fig.height = 5,
-  warning    = FALSE,
-  message    = FALSE
+  dpi        = 100,
+  fig.retina = 1,
+  dev        = "png",
+  dev.args   = list(type = "cairo-png"),
+  warning = FALSE,
+  message = FALSE
 )
+
 library(bfbin2arm)
 
 ## ----echo = FALSE-------------------------------------------------------------

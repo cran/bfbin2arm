@@ -11,9 +11,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2026-06-01" />
+<meta name="date" content="2026-06-23" />
 
-<title>Bayes-factor-based designs in bfbin2arm</title>
+<title>Clinical trial designs in bfbin2arm</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -259,13 +259,12 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Bayes-factor-based designs in
-bfbin2arm</h1>
+<h1 class="title toc-ignore">Clinical trial designs in bfbin2arm</h1>
 <h4 class="author"><p>Riko Kelter<br />
 Institute of Medical Statistics and Computational Biology<br />
 Faculty of Medicine, University of Cologne<br />
 Cologne, Germany</p></h4>
-<h4 class="date">01 June 2026</h4>
+<h4 class="date">23 June 2026</h4>
 
 
 <div id="TOC">
@@ -307,23 +306,26 @@ group is assumed</li>
 <li>Bayesian, frequentist, hybrid, and fully calibrated design modes for
 each of these designs</li>
 </ul>
+<p>It is strongly recommended to use the detailed vignettes at <a href="https://rikokelter.github.io/bfbin2arm/" class="uri">https://rikokelter.github.io/bfbin2arm/</a> instead of the
+ones provided here at CRAN.</p>
 </div>
 <div id="bayes-factors-in-single-arm-phase-ii-designs" class="section level2" number="2">
 <h2><span class="header-section-number">2</span> Bayes factors in
 single-arm phase II designs</h2>
 <p>In a typical single-arm phase II proof-of-concept trial with a binary
 endpoint, we test the null hypothesis</p>
-<p>\[ H_0 : p \le p_0 \]</p>
-<p>against the alternative</p>
-<p>\[ H_1 : p &gt; p_0, \]</p>
-<p>where \(p_0\) is the response probability of a standard therapy or
-historical control. Alternatively, a two-sided test of <span class="math inline">\(H_0:p=p_0\)</span> versus <span class="math inline">\(H_1:p \neq p_0\)</span> can be carried out.</p>
-<p>The package uses the Bayes factor \(BF_{01}\) as the central measure
-of evidence, with the convention that small values indicate evidence
-against \(H_0\) and large values indicate evidence in favour of \(H_0\).
-A two-stage design introduces a single interim analysis at \(n_1\),
-where one can stop early for futility if the interim Bayes factor
-provides sufficiently strong evidence in favour of \(H_0\).</p>
+<p><span class="math display">\[H_0 : p \leq p_0\]</span> against the
+alternative</p>
+<p><span class="math display">\[H_1 : p &gt; p_0,\]</span> where <span class="math inline">\(p_0\)</span> is the response probability of a
+standard therapy or historical control. Alternatively, a two-sided test
+of <span class="math inline">\(H_0:p=p_0\)</span> versus <span class="math inline">\(H_1:p \neq p_0\)</span> can be carried out.</p>
+<p>The package uses the Bayes factor <span class="math inline">\(BF_{01}\)</span> as the central measure of
+evidence, with the convention that small values indicate evidence
+against <span class="math inline">\(H_0\)</span> and large values
+indicate evidence in favour of <span class="math inline">\(H_0\)</span>.
+A two-stage design introduces a single interim analysis at <span class="math inline">\(n_1\)</span>, where one can stop early for
+futility if the interim Bayes factor provides sufficiently strong
+evidence in favour of <span class="math inline">\(H_0\)</span>.</p>
 <p>The underlying hypotheses in the two-arm setting are described in the
 associated vignette in detail. For brevity, we only detail some basics
 about the single-arm case in this overview.</p>
@@ -332,17 +334,17 @@ about the single-arm case in this overview.</p>
 <h2><span class="header-section-number">3</span> Types of priors</h2>
 <p>Two types of priors play a key role:</p>
 <ul>
-<li>An <em>analysis prior</em> under \(H_1\), used to compute the Bayes
-factor itself.</li>
-<li><em>Design priors</em> under \(H_0\) and \(H_1\), used to define
-Bayesian operating characteristics such as prior-predictive power and
-prior-predictive type-I error.</li>
+<li>An <em>analysis prior</em> under <span class="math inline">\(H_1\)</span>, used to compute the Bayes factor
+itself.</li>
+<li><em>Design priors</em> under <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_1\)</span>, used to define Bayesian operating
+characteristics such as prior-predictive power and prior-predictive
+type-I error.</li>
 </ul>
 <p>The package allows separate specification of design priors under
-\(H_0\) and \(H_1\) via Beta distributions (truncated in the directional
-setting). This separation is important because the prior used to
-quantify evidence in the test (Bayes factor) need not coincide with the
-prior used for planning.</p>
+<span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_1\)</span> via Beta distributions (truncated in
+the directional setting). This separation is important because the prior
+used to quantify evidence in the test (Bayes factor) need not coincide
+with the prior used for planning.</p>
 </div>
 <div id="calibration-modes" class="section level2" number="4">
 <h2><span class="header-section-number">4</span> Calibration modes</h2>
@@ -350,8 +352,7 @@ prior used for planning.</p>
 operating characteristics must satisfy user-specified targets:</p>
 <ul>
 <li><strong>Bayesian calibration</strong>: Bayesian power and Bayesian
-type-I error are calibrated using design priors under \(H_1\) and
-\(H_0\).</li>
+type-I error are calibrated using design priors under <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_0\)</span>.</li>
 <li><strong>Frequentist calibration</strong>: Frequentist power and
 frequentist type-I error are calibrated, where power is evaluated at a
 single fixed point alternative and type-I error at the null

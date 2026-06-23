@@ -1,10 +1,15 @@
-## ----include = FALSE----------------------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.width = 8,
-  fig.height = 5
+  fig.width  = 8,
+  fig.height = 5,
+  dpi        = 100,
+  fig.retina = 1,
+  dev        = "png",
+  dev.args   = list(type = "cairo-png")
 )
+
 library(bfbin2arm)
 
 ## ----echo = FALSE, out.width = "90%", fig.align = "center", fig.cap = "Figure 1: Illustration of the calibration algorithm for an optimal Bayesian single-arm phase II design with a binary endpoint"----
@@ -30,7 +35,7 @@ des_bayes <- design_singlearm_onestage_bf(
 summary(des_bayes)
 
 ## ----out.width="90%", fig.align="center"--------------------------------------
-plot(des_bayes, what = "all")
+plot(des_bayes)
 
 ## -----------------------------------------------------------------------------
 des_bayes_ce <- design_singlearm_onestage_bf(
@@ -55,7 +60,7 @@ des_bayes_ce <- design_singlearm_onestage_bf(
 summary(des_bayes_ce)
 
 ## ----out.width="90%", fig.align="center"--------------------------------------
-plot(des_bayes_ce, what = "all")
+plot(des_bayes_ce)
 
 ## -----------------------------------------------------------------------------
 des_bayes_ce50 <- design_singlearm_onestage_bf(
@@ -80,7 +85,7 @@ des_bayes_ce50 <- design_singlearm_onestage_bf(
 summary(des_bayes_ce50)
 
 ## ----out.width="90%", fig.align="center"--------------------------------------
-plot(des_bayes_ce50, what = "all")
+plot(des_bayes_ce50)
 
 ## -----------------------------------------------------------------------------
 des_full <- design_singlearm_onestage_bf(

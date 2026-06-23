@@ -1,11 +1,13 @@
-## ----include = FALSE----------------------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.width = 7,
+  fig.width  = 7,
   fig.height = 5,
-  warning = FALSE,
-  message = FALSE
+  dpi        = 100,
+  fig.retina = 1,
+  dev        = "png",
+  dev.args   = list(type = "cairo-png")
 )
 
 library(bfbin2arm)
@@ -48,7 +50,7 @@ summary(res)
 ## ----eval = FALSE-------------------------------------------------------------
 # plot(res)
 
-## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 2: Output of the plot function for a calibrated optimal single-arm two-stage design using Bayes factors. The top left panel shows Bayesian and frequentist power, Bayesian type-I-error and probability of compelling evidence (if specified) for varying interim sample sizes. The top right panel provides information about the optimal design found by the algorithm and its Bayesian and frequentist operating characteristics. The lower left and right panels visualize the analysis and design priors under the null and alternative hypothesis. Under the null hypothesis $H_0:p=p_0$, the design and analysis priors are point masses at the specified null probability p0."----
+## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 2: Output of the plot function for a calibrated optimal single-arm two-stage design using Bayes factors. The top left panel shows Bayesian and frequentist power, Bayesian type-I-error and probability of compelling evidence (if specified) for varying interim sample sizes. The top right panel provides information about the optimal design found by the algorithm and its Bayesian and frequentist operating characteristics. The lower left and right panels visualize the analysis and design priors under the null and alternative hypothesis. Under the null hypothesis $H_0:p=p_0$, the design and analysis priors are point masses at the specified null probability `p0`."----
 knitr::include_graphics("figures/optimal_single_arm_two_stage_bayes_fig2.png")
 
 ## -----------------------------------------------------------------------------
@@ -93,7 +95,7 @@ summary(res_ce)
 ## ----eval = FALSE-------------------------------------------------------------
 # plot(res_ce)
 
-## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 3: Output of the plot function for a calibrated optimal single-arm two-stage design using Bayes factors. In addition to the previous calibration requirements in terms of power and type-I-error rate, this design also adds a constraint on the probability of compelling evidence in favour of the null hypothesis $H_0$. The top left panel again shows Bayesian and frequentist power, Bayesian type-I-error and probability of compelling evidence (if specified) for varying interim sample sizes. The top right panel provides information about the optimal design found by the algorithm and its Bayesian and frequentist operating characteristics. The lower left and right panels visualize the analysis and design priors under the null and alternative hypothesis. Under the null hypothesis $H_0:p=p_0$, the design and analysis priors are point masses at the specified null probability p0."----
+## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 3: Output of the plot function for a calibrated optimal single-arm two-stage design using Bayes factors. In addition to the previous calibration requirements in terms of power and type-I-error rate, this design also adds a constraint on the probability of compelling evidence in favour of the null hypothesis $H_0$. The top left panel again shows Bayesian and frequentist power, Bayesian type-I-error and probability of compelling evidence (if specified) for varying interim sample sizes. The top right panel provides information about the optimal design found by the algorithm and its Bayesian and frequentist operating characteristics. The lower left and right panels visualize the analysis and design priors under the null and alternative hypothesis. Under the null hypothesis $H_0:p=p_0$, the design and analysis priors are point masses at the specified null probability `p0`."----
 knitr::include_graphics("figures/optimal_single_arm_two_stage_bayes_fig3.png")
 
 ## -----------------------------------------------------------------------------
@@ -125,7 +127,7 @@ summary(res_dir)
 ## ----eval = FALSE-------------------------------------------------------------
 # plot(res_dir)
 
-## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 4: Output of the plot function for a calibrated optimal single-arm two-stage design using Bayes factors in the directional test setting. The top left panel again shows Bayesian and frequentist power, Bayesian type-I-error and probability of compelling evidence (if specified) for varying interim sample sizes. The top right panel provides information about the optimal design found by the algorithm and its Bayesian and frequentist operating characteristics. The lower left and right panels visualize the analysis and design priors under the null and alternative hypothesis. Under the null hypothesis $H_0:p=p_0$, the design and analysis priors are point masses at the specified null probability p0."----
+## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 4: Output of the plot function for a calibrated optimal single-arm two-stage design using Bayes factors in the directional test setting. The top left panel again shows Bayesian and frequentist power, Bayesian type-I-error and probability of compelling evidence (if specified) for varying interim sample sizes. The top right panel provides information about the optimal design found by the algorithm and its Bayesian and frequentist operating characteristics. The lower left and right panels visualize the analysis and design priors under the null and alternative hypothesis. Under the null hypothesis $H_0:p=p_0$, the design and analysis priors are point masses at the specified null probability `p0`."----
 knitr::include_graphics("figures/optimal_single_arm_two_stage_bayes_fig4.png")
 
 ## -----------------------------------------------------------------------------
@@ -204,7 +206,4 @@ legend("bottomright",
        legend = c("Bayesian power", "Bayesian type-I", "CE(H0)"),
        col = c("darkorange", "steelblue", "darkmagenta"),
        lwd = 2, bty = "n")
-
-## -----------------------------------------------------------------------------
-sessionInfo()
 

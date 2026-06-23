@@ -1,11 +1,15 @@
 ## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment  = "#>",
-  fig.width = 7,
+  comment = "#>",
+  fig.width  = 7,
   fig.height = 5,
+  dpi        = 100,
+  fig.retina = 1,
+  dev        = "png",
+  dev.args   = list(type = "cairo-png"),
   echo = TRUE,
-  eval = TRUE,      # default, but heavy chunks override with eval = FALSE
+  eval = TRUE,
   message = FALSE,
   warning = FALSE
 )
@@ -22,7 +26,7 @@ p2_riociguat <- 48/(48+11)  # treatment arm response probability
 p2_riociguat
 
 ## ----eval = TRUE--------------------------------------------------------------
-# flat design priors under H0 and H1 (Riociguat)
+# flat design priors under H0
 a_0_d_rio <- 1
 b_0_d_rio <- 1
 
@@ -86,7 +90,7 @@ b_2_a_rio <- 1
 ## ----eval = FALSE, fig.height=7-----------------------------------------------
 # plot(res_rio_onestage)
 
-## ----echo = FALSE, out.width = "80%", fig.align = "center", fig.cap = "Figure 2: Calibrated Bayesian two-arm one-stage phase II design with binary endpoints, obtained via design_twoarm_onestage_bf(). No interim analysis is carried out, and the design is calibrated to 80% Bayesian power, 2.5% Bayesian type-I error and 60% probability of compelling evidence for the null hypothesis."----
+## ----echo = FALSE, out.width = "80%", fig.align = "center", fig.cap = "Figure 2: Calibrated Bayesian two-arm one-stage phase II design with binary endpoints, obtained via `design_twoarm_onestage_bf()`. No interim analysis is carried out, and the design is calibrated to 80% Bayesian power, 2.5% Bayesian type-I error and 60% probability of compelling evidence for the null hypothesis."----
 knitr::include_graphics("figures/twoarm-onestage-design.png")
 
 ## ----eval = FALSE-------------------------------------------------------------
@@ -160,7 +164,7 @@ knitr::include_graphics("figures/twoarm-onestage-design.png")
 ## ----riociguat-plot, eval = FALSE, fig.height=5-------------------------------
 # plot(res_rio)
 
-## ----echo = FALSE, out.width = "80%", fig.align = "center", fig.cap = "Figure 3: Calibrated Bayesian two-arm two-stage phase II design with binary endpoints, obtained via design_twoarm_twostage_bf(). An interim analysis is carried out at 10 patients per arm, and the design is calibrated to 80% Bayesian power, 2.5% Bayesian type-I error and 60% probability of compelling evidence for the null hypothesis; the final analysis is carried out after 34 patients per arm."----
+## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 3: Calibrated Bayesian two-arm two-stage phase II design with binary endpoints, obtained via `design_twoarm_twostage_bf()`. An interim analysis is carried out at 10 patients per arm, and the design is calibrated to 80% Bayesian power, 2.5% Bayesian type-I error and 60% probability of compelling evidence for the null hypothesis; the final analysis is carried out after 34 patients per arm."----
 knitr::include_graphics("figures/optimal-two-stage-design-riociguat.png")
 
 ## ----tab:onestage-twostage-riociguat, echo = FALSE----------------------------
@@ -172,7 +176,7 @@ tab_onestage_twostage <- data.frame(
   n2_2        = c("~27",                    "34"),
   N_total     = c("53",                     "68"),
   Power       = c("0.80",                   "0.83"),
-  Type1_Error = c("0.007",                  "0.006"),
+  Type1_Error = c("0.006",                  "0.006"),
   CE_H0       = c("0.62",                   "0.69"),
   E_H0_N      = c("53.0",                   "66.04")
 )
@@ -215,7 +219,7 @@ knitr::kable(
 ## ----eval = FALSE-------------------------------------------------------------
 # plot(res_rio_more_informative_design_priors)
 
-## ----echo = FALSE, out.width = "80%", fig.align = "center", fig.cap = "Figure 4: The calibrated Bayesian two-arm two-stage phase II design with binary endpoints, now using slightly more informative Beta design priors. An interim analysis is carried out at sample sizes of 10 patients per trial arm, and the design is calibrated according to the target constraints of 80% Bayesian power, 2.5% Bayesian type-I-error and 60% probability of compelling evidence for the null hypothesis. The final analysis is carried out after 23 patients have been recruited per trial arm. Note that the expected sample size under the null hypothesis has substantially decreased compared to the earlier optimal design under less informative design priors."----
+## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 4: The calibrated Bayesian two-arm two-stage phase II design with binary endpoints, now using slightly more informative Beta design priors. An interim analysis is carried out at sample sizes of 10 patients per trial arm, and the design is calibrated according to the target constraints of 80% Bayesian power, 2.5% Bayesian type-I-error and 60% probability of compelling evidence for the null hypothesis. The final analysis is carried out after 23 patients have been recruited per trial arm. Note that the expected sample size under the null hypothesis has substantially decreased compared to the earlier optimal design under less informative design priors."----
 knitr::include_graphics("figures/optimal-two-stage-design-riociguat-more-informative-design-priors.png")
 
 ## ----eval = FALSE-------------------------------------------------------------
@@ -245,8 +249,8 @@ knitr::include_graphics("figures/optimal-two-stage-design-riociguat-more-informa
 #   report_freq_type1 = TRUE,
 #   a_0_d = a_0_d_rio, b_0_d = b_0_d_rio,
 #   a_0_a = a_0_a_rio, b_0_a = b_0_a_rio,
-#   a_1_d = 1, b_1_d = 6,
-#   a_2_d = 6, b_2_d = 1,
+#   a_1_d = 1, b_1_d = 5,
+#   a_2_d = 5, b_2_d = 1,
 #   a_1_a = a_1_a_rio, b_1_a = b_1_a_rio,
 #   a_2_a = a_2_a_rio, b_2_a = b_2_a_rio
 # )
@@ -286,7 +290,7 @@ knitr::include_graphics("figures/optimal-two-stage-design-riociguat-more-informa
 ## ----eval = FALSE-------------------------------------------------------------
 # plot(res_rio_more_informative_design_priors_no_ce)
 
-## ----echo = FALSE, out.width = "80%", fig.align = "center", fig.cap = "Figure 5: The calibrated Bayesian two-arm two-stage phase II design with binary endpoints, now using slightly more informative Beta design priors. An interim analysis is carried out at sample sizes of 10 patients per trial arm, and the design is calibrated according to the target constraints of 80% Bayesian power, 2.5% Bayesian type-I-error and 60% probability of compelling evidence for the null hypothesis. The final analysis is carried out after 13 patients have been recruited per trial arm. Note that the expected sample size under the null hypothesis has substantially decreased compared to the earlier optimal design under less informative design priors."----
+## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 5: The calibrated Bayesian two-arm two-stage phase II design with binary endpoints, now using slightly more informative Beta design priors. An interim analysis is carried out at sample sizes of 10 patients per trial arm, and the design is calibrated according to the target constraints of 80% Bayesian power, 2.5% Bayesian type-I-error and 60% probability of compelling evidence for the null hypothesis. The final analysis is carried out after 13 patients have been recruited per trial arm. Note that the expected sample size under the null hypothesis has substantially decreased now that the target constraint on the probability of compelling evidence for the null hypothesis has been removed."----
 knitr::include_graphics("figures/optimal-two-stage-design-more-inf-des-priors-no-ce.png")
 
 ## ----eval = FALSE-------------------------------------------------------------
@@ -395,7 +399,7 @@ knitr::include_graphics("figures/optimal-twoarm-twostage-vignette-fixed-design-s
 ## ----eval = FALSE-------------------------------------------------------------
 # plot(res_rio_twostage_anchor_near)
 
-## ----echo = FALSE, out.width = "80%", fig.align = "center", fig.cap = "Figure 7: The calibrated Bayesian two-arm two-stage phase II design with binary endpoints, now using slightly more informative Beta design priors. The design is calibrated according to the target constraints of 90% Bayesian power and 2.5% Bayesian type-I-error."----
+## ----echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Figure 7: The calibrated Bayesian two-arm two-stage phase II design with binary endpoints, now using slightly more informative Beta design priors. The design is calibrated according to the target constraints of 90% Bayesian power and 2.5% Bayesian type-I-error."----
 knitr::include_graphics("figures/optimal-twoarm-twostage-vignette-twostage-opt-des-ss-reduc.png")
 
 ## ----eval = FALSE-------------------------------------------------------------

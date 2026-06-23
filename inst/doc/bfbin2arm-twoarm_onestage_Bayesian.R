@@ -1,13 +1,13 @@
 ## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment  = "#>",
-  fig.width = 7,
+  comment = "#>",
+  fig.width  = 7,
   fig.height = 5,
-  echo = TRUE,
-  eval = TRUE,      # default, but heavy chunks override with eval = FALSE
-  message = FALSE,
-  warning = FALSE
+  dpi        = 100,
+  fig.retina = 1,
+  dev        = "png",
+  dev.args   = list(type = "cairo-png")
 )
 options(bfbin2arm.ncores = 1L)
 library(bfbin2arm)

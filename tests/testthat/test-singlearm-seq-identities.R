@@ -1,13 +1,15 @@
 test_that("powerbinbf01seq satisfies basic inequalities and bounds", {
   res <- powerbinbf01seq(
-    n1   = 12,
-    n2   = 28,
-    k    = 1/10,
-    kf   = 3,
-    p0   = 0.2,
-    a    = 1, b = 1,
-    da   = 1, db = 1,
-    dl   = 0.2, du = 1,
+    n1 = 12,
+    n2 = 28,
+    k  = 1/10,
+    kf = 3,
+    p0 = 0.2,
+    a0 = 1, b0 = 1,
+    a1 = 1, b1 = 1,
+    da0 = 1, db0 = 1,
+    da1 = 1, db1 = 1,
+    dp  = NA_real_,         # or set a specific design p if desired
     type = "direction",
     k_ce = 10
   )
