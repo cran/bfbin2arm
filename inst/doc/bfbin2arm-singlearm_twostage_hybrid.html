@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2026-07-06" />
+<meta name="date" content="2026-09-15" />
 
 <title>Optimal hybrid calibration for single-arm two-stage Bayes factor designs with binary endpoints</title>
 
@@ -374,6 +374,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
+margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -590,7 +591,7 @@ two-stage Bayes factor designs with binary endpoints</h1>
 Institute of Medical Statistics and Computational Biology<br />
 Faculty of Medicine, University of Cologne<br />
 Cologne, Germany</p></h4>
-<h4 class="date">06 July 2026</h4>
+<h4 class="date">15 September 2026</h4>
 
 
 <div id="TOC">
@@ -793,10 +794,14 @@ differ, in general, from a Bayesian and frequentist point of view.</li>
 frequentist expected sample sizes</h2>
 <p>For a fixed two-stage design with interim sample size <span class="math inline">\(n_1\)</span> and final sample size <span class="math inline">\(n_2\)</span>, the expected sample size can be
 written in terms of the probability of early stopping for futility.</p>
-<p>Let - <span class="math inline">\(N(p)\)</span> be the total sample
-size when the true response probability is <span class="math inline">\(p\)</span>, - <span class="math inline">\(\pi_{\text{fut}}(p)\)</span> be the probability of
-stopping early for futility at the interim analysis when the true
-response probability is <span class="math inline">\(p\)</span>.</p>
+<p>Let</p>
+<ul>
+<li><span class="math inline">\(N(p)\)</span> be the total sample size
+when the true response probability is <span class="math inline">\(p\)</span>,</li>
+<li><span class="math inline">\(\pi_{\text{fut}}(p)\)</span> be the
+probability of stopping early for futility at the interim analysis when
+the true response probability is <span class="math inline">\(p\)</span>.</li>
+</ul>
 <p>By construction,</p>
 <p><span class="math display">\[
 N(p) = n_1 \cdot \pi_{\text{fut}}(p) + n_2 \cdot \{1 -
@@ -942,148 +947,74 @@ fixed.</p>
 <span id="cb5-66"><a href="#cb5-66" tabindex="-1"></a></span>
 <span id="cb5-67"><a href="#cb5-67" tabindex="-1"></a>hybrid_sensitivity <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, hybrid_sensitivity)</span>
 <span id="cb5-68"><a href="#cb5-68" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(hybrid_sensitivity, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="4%" />
+<col width="25%" />
+<col width="10%" />
+<col width="3%" />
+<col width="3%" />
+<col width="6%" />
+<col width="6%" />
+<col width="12%" />
+<col width="12%" />
+<col width="6%" />
+<col width="7%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:left;">
-prior_label
-</th>
-<th style="text-align:left;">
-feasible
-</th>
-<th style="text-align:right;">
-n1
-</th>
-<th style="text-align:right;">
-n2
-</th>
-<th style="text-align:right;">
-power
-</th>
-<th style="text-align:right;">
-type1
-</th>
-<th style="text-align:right;">
-freq_power
-</th>
-<th style="text-align:right;">
-freq_type1
-</th>
-<th style="text-align:right;">
-en_h0
-</th>
-<th style="text-align:right;">
-en_h1
-</th>
+<tr class="header">
+<th align="left"></th>
+<th align="left">prior_label</th>
+<th align="left">feasible</th>
+<th align="right">n1</th>
+<th align="right">n2</th>
+<th align="right">power</th>
+<th align="right">type1</th>
+<th align="right">freq_power</th>
+<th align="right">freq_type1</th>
+<th align="right">en_h0</th>
+<th align="right">en_h1</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-n1
-</td>
-<td style="text-align:left;">
-weakly informative
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-0.821
-</td>
-<td style="text-align:right;">
-0.004
-</td>
-<td style="text-align:right;">
-0.551
-</td>
-<td style="text-align:right;">
-0.029
-</td>
-<td style="text-align:right;">
-9.203
-</td>
-<td style="text-align:right;">
-18.998
-</td>
+<tr class="odd">
+<td align="left">n1</td>
+<td align="left">weakly informative</td>
+<td align="left">TRUE</td>
+<td align="right">7</td>
+<td align="right">20</td>
+<td align="right">0.821</td>
+<td align="right">0.004</td>
+<td align="right">0.551</td>
+<td align="right">0.029</td>
+<td align="right">9.203</td>
+<td align="right">18.998</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-n11
-</td>
-<td style="text-align:left;">
-moderately informative
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-24
-</td>
-<td style="text-align:right;">
-0.807
-</td>
-<td style="text-align:right;">
-0.004
-</td>
-<td style="text-align:right;">
-0.620
-</td>
-<td style="text-align:right;">
-0.032
-</td>
-<td style="text-align:right;">
-9.881
-</td>
-<td style="text-align:right;">
-22.451
-</td>
+<tr class="even">
+<td align="left">n11</td>
+<td align="left">moderately informative</td>
+<td align="left">TRUE</td>
+<td align="right">7</td>
+<td align="right">24</td>
+<td align="right">0.807</td>
+<td align="right">0.004</td>
+<td align="right">0.620</td>
+<td align="right">0.032</td>
+<td align="right">9.881</td>
+<td align="right">22.451</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-n12
-</td>
-<td style="text-align:left;">
-more concentrated
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:right;">
-0.837
-</td>
-<td style="text-align:right;">
-0.007
-</td>
-<td style="text-align:right;">
-0.501
-</td>
-<td style="text-align:right;">
-0.042
-</td>
-<td style="text-align:right;">
-8.186
-</td>
-<td style="text-align:right;">
-13.595
-</td>
+<tr class="odd">
+<td align="left">n12</td>
+<td align="left">more concentrated</td>
+<td align="left">TRUE</td>
+<td align="right">7</td>
+<td align="right">14</td>
+<td align="right">0.837</td>
+<td align="right">0.007</td>
+<td align="right">0.501</td>
+<td align="right">0.042</td>
+<td align="right">8.186</td>
+<td align="right">13.595</td>
 </tr>
 </tbody>
 </table>
@@ -1372,11 +1303,11 @@ Bayesian
 </td>
 <td style="text-align:left;width: 24%; ">
 Bayesian power &gt;= target_power + power_cushion;<br>Bayesian type-I
-optional CE for H0 &gt;= target_ce_h0
+&lt;= target_type1;<br>optional CE for H0 &gt;= target_ce_h0
 </td>
 <td style="text-align:left;width: 20%; ">
-Bayesian power &gt;= target_power;<br>Bayesian type-I optional CE for H0
-&gt;= target_ce_h0
+Bayesian power &gt;= target_power;<br>Bayesian type-I &lt;=
+target_type1;<br>optional CE for H0 &gt;= target_ce_h0
 </td>
 <td style="text-align:left;width: 48%; ">
 The anchor is a fixed-sample design that slightly overshoots the target
@@ -1391,10 +1322,11 @@ frequentist
 </td>
 <td style="text-align:left;width: 24%; ">
 Frequentist power &gt;= target_freq_power +
-power_cushion;<br>frequentist type-I
+power_cushion;<br>frequentist type-I &lt;= target_freq_type1
 </td>
 <td style="text-align:left;width: 20%; ">
-Frequentist power &gt;= target_freq_power;<br>frequentist type-I
+Frequentist power &gt;= target_freq_power;<br>frequentist type-I &lt;=
+target_freq_type1
 </td>
 <td style="text-align:left;width: 48%; ">
 The anchor is a fixed-sample design with cushioned frequentist power at
@@ -1410,9 +1342,11 @@ hybrid
 </td>
 <td style="text-align:left;width: 24%; ">
 Bayesian power &gt;= target_power + power_cushion;<br>frequentist type-I
+&lt;= target_freq_type1
 </td>
 <td style="text-align:left;width: 20%; ">
-Bayesian power &gt;= target_power;<br>frequentist type-I
+Bayesian power &gt;= target_power;<br>frequentist type-I &lt;=
+target_freq_type1
 </td>
 <td style="text-align:left;width: 48%; ">
 Hybrid calibration combines a Bayesian power requirement with a
@@ -1428,14 +1362,15 @@ full
 </td>
 <td style="text-align:left;width: 24%; ">
 Bayesian power &gt;= target_power + power_cushion;<br>Bayesian type-I
-frequentist power &gt;= target_freq_power +
-power_cushion;<br>frequentist type-I optional CE for H0 &gt;=
-target_ce_h0
+&lt;= target_type1;<br>frequentist power &gt;= target_freq_power +
+power_cushion;<br>frequentist type-I &lt;=
+target_freq_type1;<br>optional CE for H0 &gt;= target_ce_h0
 </td>
 <td style="text-align:left;width: 20%; ">
-Bayesian power &gt;= target_power;<br>Bayesian type-I frequentist power
-&gt;= target_freq_power;<br>frequentist type-I optional CE for H0 &gt;=
-target_ce_h0
+Bayesian power &gt;= target_power;<br>Bayesian type-I &lt;=
+target_type1;<br>frequentist power &gt;=
+target_freq_power;<br>frequentist type-I &lt;=
+target_freq_type1;<br>optional CE for H0 &gt;= target_ce_h0
 </td>
 <td style="text-align:left;width: 48%; ">
 Full calibration enforces both Bayesian and frequentist criteria. The
@@ -1549,7 +1484,7 @@ calling</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>res_hybrid_ce_with_power_cushion</span></code></pre></div>
 <p>The example exemplifies that is is recommended to always use a small
 power cushion to isolate optimal designs reliably with the two-step
-algorithm underlying the function. For further details, see also <span class="citation">Kelter and Pawel (2025a)</span> and <span class="citation">Kelter and Pawel (2025b)</span>.</p>
+algorithm underlying the function. For further details, see also <span class="citation">(<strong>kelter_third_2025?</strong>)</span> and <span class="citation">(<strong>kelter_two_stage_2025?</strong>)</span>.</p>
 </div>
 <div id="practical-recommendations-for-hybrid-calibration" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> Practical
@@ -1569,20 +1504,11 @@ to avoid overconstraining the problem.</li>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-jeffreysTheoryProbability1961" class="csl-entry">
-Jeffreys, Harold. 1961. <em>Theory of <span>Probability</span></em>. In
-<em>Oxford Classic Texts in the Physical Sciences</em>, 3rd ed. Oxford
+Jeffreys, Harold. 1961. <em>Theory of <span>Probability</span></em>.
+<em>Oxford Classic Texts in the Physical Sciences</em>. 3rd ed. Oxford
 University Press.
-</div>
-<div id="ref-kelter_third_2025" class="csl-entry">
-Kelter, Riko, and Samuel Pawel. 2025a. <em>Bayesian Power and Sample
-Size Calculations for Bayes Factors in the Binomial Setting</em>. <a href="https://arxiv.org/abs/2502.02914">https://arxiv.org/abs/2502.02914</a>.
-</div>
-<div id="ref-kelter_two_stage_2025" class="csl-entry">
-Kelter, Riko, and Samuel Pawel. 2025b. <em>The Bayesian Optimal
-Two-Stage Design for Clinical Phase II Trials Based on Bayes
-Factors</em>. <a href="https://arxiv.org/abs/2511.23144">https://arxiv.org/abs/2511.23144</a>.
 </div>
 </div>
 </div>

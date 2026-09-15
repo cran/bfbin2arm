@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2026-07-06" />
+<meta name="date" content="2026-09-15" />
 
 <title>Optimal Bayesian calibration of two-arm two-stage Bayes factor designs with binary endpoints</title>
 
@@ -150,6 +150,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
+margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -367,7 +368,7 @@ Institute of Medical Statistics and Computational Biology<br />
 Faculty of Medicine<br />
 University of Cologne<br />
 Cologne, Germany</div></h4>
-<h4 class="date">06 July 2026</h4>
+<h4 class="date">15 September 2026</h4>
 
 
 <div id="TOC">
@@ -418,16 +419,15 @@ the calibration grid (and runtime)</a></li>
 <p>This vignette illustrates the use of the
 <code>design_twoarm_twostage_bf()</code> function for designing
 two-stage two-arm binomial phase II trials based on Bayes factors. We
-re-analyze a clinical trial discussed in <span class="citation">(Kelter
-2026b)</span> and show how to construct optimal Bayesian two-stage
-designs in these settings. In contrast to a one-stage design, where
-power and sample size calculations have been developed by Kelter and
-Pawel <span class="citation">(2025a, 2025b)</span>, and the designs we
-aim for in this vignette always include an interim analysis which allows
+re-analyze a clinical trial discussed in <span class="citation">(<strong>kelter_power_2026?</strong>)</span> and show
+how to construct optimal Bayesian two-stage designs in these settings.
+In contrast to a one-stage design, where power and sample size
+calculations have been developed by Kelter and Pawel <span class="citation">(<strong>kelter_third_2025?</strong>;
+<strong>kelter_two_stage_2025?</strong>)</span>, and the designs we aim
+for in this vignette always include an interim analysis which allows
 stopping the trial early for futility. The corresponding single-stage
-design without such an interim analysis is provided in <span class="citation">(Kelter 2026b)</span>. The methodology for the
-two-stage two-arm design is developed in <span class="citation">(Kelter
-2026a)</span>.</p>
+design without such an interim analysis is provided in <span class="citation">(<strong>kelter_power_2026?</strong>)</span>. The
+methodology for the two-stage two-arm design is developed in <span class="citation">(Kelter 2026)</span>.</p>
 <p>Thus, the principal goal of the
 <code>design_twoarm_twostage_bf()</code> function is to provide a
 calibrated Bayesian trial design for a phase II trial in terms of power
@@ -464,9 +464,9 @@ versus } \hspace{1cm} H_1:\eta &gt; 0\)</span></li>
 } \hspace{1cm} H_1:\eta &lt; 0\)</span></li>
 </ul>
 <p>For details and further explanations on each of these directional
-tests, see <span class="citation">(Kelter 2026b)</span>. The associated
-Bayes factors with each of these three directional tests are denoted as
-<span class="math inline">\(\mathrm{BF}_{+-}\)</span>, <span class="math inline">\(\mathrm{BF}_{+0}\)</span> and <span class="math inline">\(\mathrm{BF}_{-0}\)</span>. Also, we denote <span class="math inline">\(H_-:\eta \leq 0\)</span> and <span class="math inline">\(H_+:\eta &gt; 0\)</span>.</p>
+tests, see <span class="citation">(<strong>kelter_power_2026?</strong>)</span>. The
+associated Bayes factors with each of these three directional tests are
+denoted as <span class="math inline">\(\mathrm{BF}_{+-}\)</span>, <span class="math inline">\(\mathrm{BF}_{+0}\)</span> and <span class="math inline">\(\mathrm{BF}_{-0}\)</span>. Also, we denote <span class="math inline">\(H_-:\eta \leq 0\)</span> and <span class="math inline">\(H_+:\eta &gt; 0\)</span>.</p>
 </div>
 <div id="priors-design-vs-analysis" class="section level2" number="3">
 <h2><span class="header-section-number">3</span> Priors: design vs
@@ -502,8 +502,7 @@ design priors under a directional-null <span class="math inline">\(H_-\)</span> 
 \le p_1\)</span>), specified by
 <code>a_1_d_Hminus, b_1_d_Hminus, a_2_d_Hminus, b_2_d_Hminus</code>.
 These are used for one-sided Bayes factors only. For details on the
-precise specification of these tests, see <span class="citation">Kelter
-and Pawel (2025b)</span>.</p>
+precise specification of these tests, see <span class="citation">(<strong>kelter_two_stage_2025?</strong>)</span>.</p>
 </div>
 <div id="analysis-priors" class="section level3" number="3.2">
 <h3><span class="header-section-number">3.2</span> Analysis priors</h3>
@@ -611,9 +610,8 @@ design in practice with the function
 trial: fixed-sample design and optimal two-stage design</h2>
 <p>In this section we consider the <strong>Riociguat phase II
 trial</strong> in systemic sclerosis <span class="citation">(Khanna et
-al. 2020)</span>, re-analysed in <span class="citation">Kelter
-(2026b)</span>. For day-to-day use, the recommended entry points are the
-design wrappers</p>
+al. 2020)</span>, re-analysed in <span class="citation">(<strong>kelter_power_2026?</strong>)</span>. For
+day-to-day use, the recommended entry points are the design wrappers</p>
 <ul>
 <li><code>design_twoarm_onestage_bf()</code> for fixed-sample designs
 without interim analysis, and<br />
@@ -663,11 +661,12 @@ expected sample size, either <code>&quot;Bayesian&quot;</code> (default) or
 <code>&quot;frequentist&quot;</code>.</li>
 <li><code>power_cushion</code>: Optional extra power margin used in step
 1 when identifying a sufficient fixed-sample design. This is relevant as
-<span class="citation">Kelter (2026b)</span> showed that the power of a
-two-arm design can decrease when introducing an interim analysis which
-allows stopping for futility only. As a consequence, the power cushion
-safeguards against obtaining a design which cannot meet the required
-power target after introducing an interim analysis.</li>
+<span class="citation">(<strong>kelter_power_2026?</strong>)</span>
+showed that the power of a two-arm design can decrease when introducing
+an interim analysis which allows stopping for futility only. As a
+consequence, the power cushion safeguards against obtaining a design
+which cannot meet the required power target after introducing an interim
+analysis.</li>
 <li><code>interim_fraction</code>: Lower and upper bounds for the
 interim sample sizes, expressed as fractions of the fixed-sample sizes
 found in step 1. Defaults to <code>c(0, 1)</code>, which means all
@@ -746,9 +745,9 @@ binary endpoint example are</p>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>p2_riociguat <span class="ot">&lt;-</span> <span class="dv">48</span><span class="sc">/</span>(<span class="dv">48</span><span class="sc">+</span><span class="dv">11</span>)  <span class="co"># treatment arm response probability</span></span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>p2_riociguat</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; [1] 0.8135593</span></span></code></pre></div>
-<p>as given in Section 2.5 of <span class="citation">Kelter
-(2026b)</span>]. The response in the treatment group is higher compared
-to the control group, and the test we perform is <span class="math inline">\(H_0:p_1=p_2\)</span> versus <span class="math inline">\(H_+:p_1&lt;p_2\)</span>. We thus exclude the
+<p>as given in Section 2.5 of <span class="citation">(<strong>kelter_power_2026?</strong>)</span>]. The
+response in the treatment group is higher compared to the control group,
+and the test we perform is <span class="math inline">\(H_0:p_1=p_2\)</span> versus <span class="math inline">\(H_+:p_1&lt;p_2\)</span>. We thus exclude the
 possibility that the response probability in the control group can
 outperform the response probability in the treatment group. If this
 assumption is too optimistic, we could also perform the test of <span class="math inline">\(H_-:p_2 \le p_1\)</span> versus <span class="math inline">\(H_+:p_1&lt;p_2\)</span> or the two-sided test.</p>
@@ -779,15 +778,15 @@ example:</p>
 <code>test = &quot;BF+0&quot;</code> with evidence thresholds
 <code>k = 1/10</code> (strong evidence for efficacy) and
 <code>k_f = 3</code> (moderate evidence to stop early for futility),
-compare <span class="citation">Kelter (2026b)</span>. We provide a brief
-discussion of choosing these thresholds below.</p>
+compare <span class="citation">(<strong>kelter_power_2026?</strong>)</span>. We
+provide a brief discussion of choosing these thresholds below.</p>
 </div>
 <div id="riociguat-phase-ii-trial-fixed-sample-comparator-via-design_twoarm_onestage_bf" class="section level3" number="5.3">
 <h3><span class="header-section-number">5.3</span> Riociguat phase II
 trial: Fixed-sample comparator via
 <code>design_twoarm_onestage_bf()</code></h3>
-<p>In the one-stage reference design used in <span class="citation">Kelter (2026b)</span> for the riociguat example, the
-trial uses</p>
+<p>In the one-stage reference design used in <span class="citation">(<strong>kelter_power_2026?</strong>)</span> for the
+riociguat example, the trial uses</p>
 <ul>
 <li><span class="math inline">\(n_1 = 60\)</span> patients in the
 control arm,</li>
@@ -811,10 +810,10 @@ quantities are reported but not used as hard constraints.</p>
 expectation that the treatment is more effective than placebo in the
 control group and encoded by parameters such as
 <code>a_1_d = a_1_d_rio</code>. The analysis priors are chosen flat via
-parameters such as <code>a_1_a = a_1_a_rio</code>, as in <span class="citation">Kelter (2026b)</span>. To keep the console output
-compact in this vignette, we set <code>progress = FALSE</code>; in
-practice you can set <code>progress = TRUE</code> to monitor the
-calibration.</p>
+parameters such as <code>a_1_a = a_1_a_rio</code>, as in <span class="citation">(<strong>kelter_power_2026?</strong>)</span>. To keep
+the console output compact in this vignette, we set
+<code>progress = FALSE</code>; in practice you can set
+<code>progress = TRUE</code> to monitor the calibration.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- One-stage design calibration for riociguat-type trial ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>res_rio_onestage <span class="ot">&lt;-</span> <span class="fu">design_twoarm_onestage_bf</span>(</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">n_min =</span> <span class="dv">10</span>,</span>
@@ -896,9 +895,9 @@ Bayesian power, 2.5% Bayesian type-I error and 60% probability of
 compelling evidence for the null hypothesis.
 </p>
 </div>
-<p>Figure 2 shows the calibrated one-stage design developed in <span class="citation">Kelter (2026b)</span>. In particular, it illustrates
-that the one-stage design without an interim analysis requires 53
-patients in total (as can be seen in
+<p>Figure 2 shows the calibrated one-stage design developed in <span class="citation">(<strong>kelter_power_2026?</strong>)</span>. In
+particular, it illustrates that the one-stage design without an interim
+analysis requires 53 patients in total (as can be seen in
 <code>res_rio_onestage$design</code>) to reach the desired threshold for
 Bayesian power, while 45 patients are necessary to reach the desired
 probability of compelling evidence for the null hypothesis. The Bayesian
@@ -1187,116 +1186,64 @@ two-stage design with interim look at <span class="math inline">\((n_1^{(1)}, n_
 maximum total sample size <span class="math inline">\(N_{\text{total}} =
 68\)</span>.</p>
 <table>
-<caption>
-Bayesian operating characteristics of the fixed-sample one-stage design
-at \(N_{\text{total}} = 53\) and the corresponding optimal two-stage
-design with interim look at \((n_1^{(1)}, n_1^{(2)}) = (10, 10)\) and
-maximum total sample size \(N_{\text{total}} = 68\) for the riociguat
-example.
-</caption>
+<caption>Bayesian operating characteristics of the fixed-sample
+one-stage design at \(N_{\text{total}} = 53\) and the corresponding
+optimal two-stage design with interim look at \((n_1^{(1)}, n_1^{(2)}) =
+(10, 10)\) and maximum total sample size \(N_{\text{total}} = 68\) for
+the riociguat example.</caption>
+<colgroup>
+<col width="25%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="10%" />
+<col width="7%" />
+<col width="15%" />
+<col width="7%" />
+<col width="8%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-Design
-</th>
-<th style="text-align:left;">
-n1_1
-</th>
-<th style="text-align:left;">
-n1_2
-</th>
-<th style="text-align:left;">
-n2_1
-</th>
-<th style="text-align:left;">
-n2_2
-</th>
-<th style="text-align:left;">
-N_total
-</th>
-<th style="text-align:left;">
-Power
-</th>
-<th style="text-align:left;">
-Type1_Error
-</th>
-<th style="text-align:left;">
-CE_H0
-</th>
-<th style="text-align:left;">
-E_H0_N
-</th>
+<tr class="header">
+<th align="left">Design</th>
+<th align="left">n1_1</th>
+<th align="left">n1_2</th>
+<th align="left">n2_1</th>
+<th align="left">n2_2</th>
+<th align="left">N_total</th>
+<th align="left">Power</th>
+<th align="left">Type1_Error</th>
+<th align="left">CE_H0</th>
+<th align="left">E_H0_N</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-One-stage (fixed)
-</td>
-<td style="text-align:left;">
-<ul>
-<li></td>
-<td style="text-align:left;">
-<ul>
-<li></td>
-<td style="text-align:left;">
-~26
-</td>
-<td style="text-align:left;">
-~27
-</td>
-<td style="text-align:left;">
-53
-</td>
-<td style="text-align:left;">
-0.80
-</td>
-<td style="text-align:left;">
-0.006
-</td>
-<td style="text-align:left;">
-0.62
-</td>
-<td style="text-align:left;">
-53.0
-</td>
+<tr class="odd">
+<td align="left">One-stage (fixed)</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">~26</td>
+<td align="left">~27</td>
+<td align="left">53</td>
+<td align="left">0.80</td>
+<td align="left">0.006</td>
+<td align="left">0.62</td>
+<td align="left">53.0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Two-stage (optimal)
-</td>
-<td style="text-align:left;">
-10
-</td>
-<td style="text-align:left;">
-10
-</td>
-<td style="text-align:left;">
-34
-</td>
-<td style="text-align:left;">
-34
-</td>
-<td style="text-align:left;">
-68
-</td>
-<td style="text-align:left;">
-0.83
-</td>
-<td style="text-align:left;">
-0.006
-</td>
-<td style="text-align:left;">
-0.69
-</td>
-<td style="text-align:left;">
-66.04
-</td>
+<tr class="even">
+<td align="left">Two-stage (optimal)</td>
+<td align="left">10</td>
+<td align="left">10</td>
+<td align="left">34</td>
+<td align="left">34</td>
+<td align="left">68</td>
+<td align="left">0.83</td>
+<td align="left">0.006</td>
+<td align="left">0.69</td>
+<td align="left">66.04</td>
 </tr>
 </tbody>
-</table></li>
-</ul></li>
-</ul>
+</table>
 </div>
 <div id="interpretation-of-the-small-futility-probability" class="section level3" number="5.6">
 <h3><span class="header-section-number">5.6</span> Interpretation of the
@@ -2100,55 +2047,41 @@ the package, once these features are implemented.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-europeanmedicinesagencyICHE20Adaptive2025" class="csl-entry">
-European Medicines Agency. 2025. <em><span>ICH E20</span> Adaptive
+European Medicines Agency. 2025. <span>“<span>ICH E20</span> Adaptive
 Designs for Clinical Trials - <span>Scientific</span> Guideline
-<span>European Medicines Agency</span> (<span>EMA</span>)</em>. European
-Medicines Agency.
+<span>European Medicines Agency</span> (<span>EMA</span>).”</span>
+European Medicines Agency.
 </div>
 <div id="ref-kelterOptimalSequentialTwostage2026" class="csl-entry">
-Kelter, Riko. 2026a. <span>“Optimal Sequential Two-Stage <span>Bayes
+Kelter, Riko. 2026. <span>“Optimal Sequential Two-Stage <span>Bayes
 Factor Design</span> for Two-Arm Clinical <span>Phase II Trials</span>
-with Binary <span>Endpoints</span>.”</span> In <em>arXiv.org</em>.
-Https://arxiv.org/abs/2606.02410v1.
-</div>
-<div id="ref-kelter_power_2026" class="csl-entry">
-Kelter, Riko. 2026b. <em>Power and Sample Size Calculations for Bayes
-Factors in Two-Arm Clinical Phase II Trials with Binary Endpoints</em>.
-<a href="https://arxiv.org/abs/2603.01715">https://arxiv.org/abs/2603.01715</a>.
-</div>
-<div id="ref-kelter_third_2025" class="csl-entry">
-Kelter, Riko, and Samuel Pawel. 2025a. <em>Bayesian Power and Sample
-Size Calculations for Bayes Factors in the Binomial Setting</em>. <a href="https://arxiv.org/abs/2502.02914">https://arxiv.org/abs/2502.02914</a>.
-</div>
-<div id="ref-kelter_two_stage_2025" class="csl-entry">
-Kelter, Riko, and Samuel Pawel. 2025b. <em>The Bayesian Optimal
-Two-Stage Design for Clinical Phase II Trials Based on Bayes
-Factors</em>. <a href="https://arxiv.org/abs/2511.23144">https://arxiv.org/abs/2511.23144</a>.
+with Binary <span>Endpoints</span>.”</span> arXiv preprint.
 </div>
 <div id="ref-khannaRiociguatPatientsEarly2020" class="csl-entry">
-Khanna, Dinesh, Yannick Allanore, Christopher P. Denton, et al. 2020.
-<span>“Riociguat in Patients with Early Diffuse Cutaneous Systemic
+Khanna, Dinesh, Yannick Allanore, Christopher P. Denton, Masataka
+Kuwana, Marco Matucci-Cerinic, Janet E. Pope, Tatsuya Atsumi, et al.
+2020. <span>“Riociguat in Patients with Early Diffuse Cutaneous Systemic
 Sclerosis (<span>RISE-SSc</span>): Randomised, Double-Blind,
-Placebo-Controlled Multicentre Trial.”</span> <em>Annals of the
-Rheumatic Diseases</em> 79 (5): 618–25. <a href="https://doi.org/10.1136/annrheumdis-2019-216823">https://doi.org/10.1136/annrheumdis-2019-216823</a>.
+Placebo-Controlled Multicentre Trial.”</span> <em>Ann. Rheum. Dis.</em>
+79 (5): 618–25. <a href="https://doi.org/10.1136/annrheumdis-2019-216823">https://doi.org/10.1136/annrheumdis-2019-216823</a>.
 </div>
 <div id="ref-FDA_UseOfBayesianMethodologyJanuary2026" class="csl-entry">
 U.S. Department of Health and Human Services Food and Drug
 Administration, Center for Drug Evaluation and Research (CDER), Center
-for Biologics Evaluation and Research (CBER). 2026. <em>Use of
+for Biologics Evaluation and Research (CBER). 2026. <span>“Use of
 <span>Bayesian Methodology</span> in <span>Clinical Trials</span> of
 <span>Drug</span> and <span>Biological Products</span> -
-<span>Guidance</span> for <span>Industry</span></em>.
+<span>Guidance</span> for <span>Industry</span>.”</span>
 </div>
 <div id="ref-FDA_ComplexInnovativeDesignsDecember2020" class="csl-entry">
 U.S. Department of Health and Human Services, Food and Drug
 Administration, Center for Biologics Evaluation and Research, and Center
-for Drug Evaluation and Research. 2020. <em>Interacting with the
+for Drug Evaluation and Research. 2020. <span>“Interacting with the
 <span>FDA</span> on <span>Complex Innovative Trial Designs</span> for
 <span>Drugs</span> and <span>Biological Products</span> -
-<span>Guidance</span> for <span>Industry</span></em>.
+<span>Guidance</span> for <span>Industry</span>.”</span>
 </div>
 </div>
 </div>
