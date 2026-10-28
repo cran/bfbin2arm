@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2026-09-15" />
+<meta name="date" content="2026-10-28" />
 
 <title>Clinical trial designs in bfbin2arm</title>
 
@@ -43,6 +43,29 @@ ul.task-list{list-style: none;}
 
 
 
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
 
 <style type="text/css">body {
 background-color: #fff;
@@ -241,7 +264,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 Institute of Medical Statistics and Computational Biology<br />
 Faculty of Medicine, University of Cologne<br />
 Cologne, Germany</p></h4>
-<h4 class="date">15 September 2026</h4>
+<h4 class="date">28 October 2026</h4>
 
 
 <div id="TOC">
@@ -256,7 +279,7 @@ designs</a></li>
 <li><a href="#single-arm-designs" id="toc-single-arm-designs"><span class="toc-section-number">5.1</span> Single-arm designs</a></li>
 <li><a href="#two-arm-designs" id="toc-two-arm-designs"><span class="toc-section-number">5.2</span> Two-arm designs</a></li>
 </ul></li>
-<li><a href="#references" id="toc-references"><span class="toc-section-number">6</span> References</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
 </ul>
 </div>
 
@@ -268,9 +291,10 @@ on early-phase clinical trials, in particular, phase II trials. The
 central idea is to replace Monte Carlo simulation by fast numerical
 calculations of design operating characteristics, both in fixed-sample
 and two-stage settings. The underlying statistical theory is developed
-in <span class="citation">(<strong>kelter_third_2025?</strong>)</span>,
-extended to the single-arm two-stage optimal setting by <span class="citation">(<strong>kelter_two_stage_2025?</strong>)</span>, and
-further developed to the two-arm single-stage setting by <span class="citation">(<strong>kelter_power_2026?</strong>)</span>.</p>
+in <span class="citation">(Kelter and Pawel 2025a)</span>, extended to
+the single-arm two-stage optimal setting by <span class="citation">(Kelter and Pawel 2025b)</span>, and further developed
+to the two-arm single-stage setting by <span class="citation">(Kelter
+2026)</span>.</p>
 <p>The package covers:</p>
 <ul>
 <li>single-arm one-stage designs based on Bayes factors,</li>
@@ -417,8 +441,27 @@ futility. Again, a treatment and control group are assumed.</p></li>
 </ol>
 </div>
 </div>
-<div id="references" class="section level2" number="6">
-<h2><span class="header-section-number">6</span> References</h2>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-kelterTwoArmSingleStage2026" class="csl-entry">
+Kelter, Riko. 2026. <span>“Power and <span>Sample Size
+Calculations</span> for <span>Bayes Factors</span> in Two-Arm Clinical
+<span>Phase II Trials</span> with Binary <span>Endpoints</span>.”</span>
+arXiv preprint. <a href="https://doi.org/10.48550/arXiv.2603.01715">https://doi.org/10.48550/arXiv.2603.01715</a>.
+</div>
+<div id="ref-KelterPawel2025" class="csl-entry">
+Kelter, Riko, and Samuel Pawel. 2025a. <span>“Bayesian
+<span>Power</span> and <span>Sample Size Calculations</span> for
+<span>Bayes Factors</span> in the <span>Binomial Setting</span>.”</span>
+arXiv preprint. <a href="https://doi.org/10.48550/arXiv.2502.02914">https://doi.org/10.48550/arXiv.2502.02914</a>.
+</div>
+<div id="ref-KelterPawelTwoStage2025" class="csl-entry">
+———. 2025b. <span>“The <span>Bayesian</span> Optimal Two-Stage Design
+for Clinical Phase <span>II</span> Trials Based on <span>Bayes</span>
+Factors.”</span> arXiv preprint. <a href="https://doi.org/10.48550/arXiv.2511.23144">https://doi.org/10.48550/arXiv.2511.23144</a>.
+</div>
+</div>
 </div>
 
 
